@@ -2,23 +2,27 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import axios from "axios";
-import jwt from 'jsonwebtoken';
+// import jwt from 'jsonwebtoken';
 
 export const authOptions = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
     GitHubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     }),
   ],
   callbacks: {
+    // NEED TO CHANGE METHOD NAME, IT INTEFERES WITH USE OF jwt module
     async jwt({ token, account, profile }) {
+      console.log({account})
+      console.log({profile})
       if (account && profile) {
         try {
+          // NEED TO FIGURE OUR WHY WE GET A 404 HERE
           const userRes = await axios.post(
             `${process.env.LOCAL_BACKEND_URL}/users/oauth`,
             {
@@ -30,11 +34,12 @@ export const authOptions = {
             }
           );
 
+          console.log("useres", userRes?.data)
           token.userId = userRes.data._id;
         } catch (err) {
           console.error(
             "Error syncing user with backend:",
-            err.response?.data || err.message
+            err.message
           );
         }
       }
