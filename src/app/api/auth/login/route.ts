@@ -1,32 +1,18 @@
-
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   try {
-    const { email, password, name, confirm } = await request.json();
+    const { email, password } = await request.json();
 
-    // Basic server-side validation
-    if (!name) {
-      return NextResponse.json(
-        { message: "Name is required." },
-        { status: 400 } // Bad Request
-      );
-    }
     if (!email || !password || typeof email !== 'string' || typeof password !== 'string' || password.length < 3) {
       return NextResponse.json(
         { message: "Invalid email or password." },
         { status: 400 } // Bad Request
       );
     }
-    if (password !== confirm) {
-      return NextResponse.json(
-        { message: "Passwords must match." },
-        { status: 400 } // Bad Request
-      );
-    }
 
     // 3. In a real app, you would perform database operations here:
-    console.log("Creating user (API Route):", { email });
+    console.log("Login user (API Route):", { email });
     // const existingUser = await db.user.findUnique({ where: { email } });
     // if (existingUser) {
     //   return NextResponse.json({ message: "Email already in use." }, { status: 409 }); // Conflict
@@ -35,7 +21,7 @@ export async function POST(request: Request) {
 
     // 4. Respond with a success message
     return NextResponse.json(
-      { message: "User created successfully." },
+      { message: "User succesfully signed in successfully." },
       { status: 201 } // Created
     );
 

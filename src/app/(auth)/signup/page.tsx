@@ -7,47 +7,45 @@ import Link from 'next/link';
 
 
 export default function SignUpPage() {
-  interface form {
-    name: string;
-    email: string;
-    password: string;
-    confirm: string;
-  }
-  const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
-  const [error, setError] = useState('');
   const router = useRouter();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsLoading(true);
+    setError(null);
 
-    if (form.password !== form.confirm) {
-      return setError("Passwords don't match");
+    if (password !== confirm) {
+      return setError("Passwords must match.")
     }
-    // console.log({form})
+
     try {
       const res = await fetch('/api/auth/signup', {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    // headers: { "Content-Type": "application/json" },
-    body: form,
-  });
-      console.log("res from submit", res)
-      // if (!res.ok) {
-      //   const { message } = await res.json();
-      //   console.log(message)
-      //   throw new Error(message || 'Sign up failed');
-      // }
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password, confirm }),
+      });
 
-      // router.push('/login'); // or auto-signin
-    } catch (err: any) {
-      console.error(err)
-      setError(err.message);
+      if (res.ok) {
+        router.push("/login"); // Redirect on success
+      } else {
+        const errorData = await res.json();
+        setError(errorData.message || "Failed to sign up.");
+      }
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
@@ -61,8 +59,8 @@ export default function SignUpPage() {
             type="text"
             name="name"
             placeholder="Full Name"
-            value={form.name}
-            onChange={handleChange}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             className="w-full border border-gray-300 rounded-xl p-3"
             required
           />
@@ -71,8 +69,8 @@ export default function SignUpPage() {
             type="email"
             name="email"
             placeholder="Email"
-            value={form.email}
-            onChange={handleChange}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full border border-gray-300 rounded-xl p-3"
             required
           />
@@ -81,8 +79,8 @@ export default function SignUpPage() {
             type="password"
             name="password"
             placeholder="Password"
-            value={form.password}
-            onChange={handleChange}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="w-full border border-gray-300 rounded-xl p-3"
             required
           />
@@ -91,8 +89,8 @@ export default function SignUpPage() {
             type="password"
             name="confirm"
             placeholder="Confirm Password"
-            value={form.confirm}
-            onChange={handleChange}
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
             className="w-full border border-gray-300 rounded-xl p-3"
             required
           />
@@ -101,7 +99,7 @@ export default function SignUpPage() {
             type="submit"
             className="w-full bg-blue-600 text-white rounded-xl p-3 font-semibold hover:bg-blue-700"
           >
-            Sign Up
+            {isLoading ? "Signing Up..." : "Sign Up"}
           </button>
         </form>
 

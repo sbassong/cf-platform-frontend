@@ -16,6 +16,7 @@ export const authOptions = {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
+      
       async authorize(credentials) {
         const res = await fetch(
           `${process.env.LOCAL_BACKEND_URL}/auth/signin`,
@@ -25,8 +26,10 @@ export const authOptions = {
             body: JSON.stringify(credentials),
           }
         );
-
+        
         const user = await res.json();
+        console.log({user})
+
         if (res.ok && user) return user;
         return null;
       },
