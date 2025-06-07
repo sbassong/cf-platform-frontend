@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
@@ -26,10 +25,10 @@ export default function SignUpPage() {
     }
 
     try {
-      const res = await fetch('/api/auth/signup', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password, confirm }),
+        body: JSON.stringify({ name, email, password }),
       });
 
       if (res.ok) {
