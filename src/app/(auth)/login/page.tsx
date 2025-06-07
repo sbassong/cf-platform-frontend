@@ -16,7 +16,9 @@ export default function LoginPage() {
       password,
     });
 
-    if (!res?.ok) setError('Invalid email or password');
+    console.log(res)
+    if (!res?.ok) setError('Invalid email or password')
+    else console.log("signed in with user ", email)
   };
 
   return (

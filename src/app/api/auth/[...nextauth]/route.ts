@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import axios from "axios";
-// import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 export const authOptions = {
   providers: [
@@ -16,10 +16,10 @@ export const authOptions = {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      
       async authorize(credentials) {
+        console.log("THIS RUNS ON SIGN IN WITH CREDS ", credentials)
         const res = await fetch(
-          `${process.env.LOCAL_BACKEND_URL}/auth/signin`,
+          `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/signin`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -28,6 +28,7 @@ export const authOptions = {
         );
         
         const user = await res.json();
+        console.log(res)
         console.log({user})
 
         if (res.ok && user) return user;
@@ -37,10 +38,11 @@ export const authOptions = {
   ],
   callbacks: {
     async jwt({ token, account, profile }) {
+      console.log('THIS IS JWT RUNNING ++++')
       if (account && profile) {
         try {
           const userRes = await axios.post(
-            `${process.env.LOCAL_BACKEND_URL}/users/oauth`,
+            `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/users/oauth`,
             {
               email: profile.email,
               name: profile.name,
@@ -50,7 +52,7 @@ export const authOptions = {
             }
           );
 
-          console.log("useres", userRes?.data);
+          console.log("user res", userRes?.data);
           token.userId = userRes.data._id;
         } catch (err) {
           console.error("Error syncing user with backend:", err.message);
