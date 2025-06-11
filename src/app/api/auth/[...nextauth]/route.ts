@@ -17,7 +17,7 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        console.log("THIS RUNS ON SIGN IN WITH CREDS ", credentials)
+        // console.log("THIS RUNS ON SIGN IN WITH CREDS ", credentials)
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/signin`,
           {
@@ -28,8 +28,8 @@ export const authOptions = {
         );
         
         const user = await res.json();
-        console.log(res)
-        console.log({user})
+        // console.log(res)
+        // console.log({user})
 
         if (res.ok && user) return user;
         return null;
