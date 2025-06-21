@@ -1,24 +1,57 @@
 'use client';
-import { signIn } from 'next-auth/react';
-import { useState } from 'react';
-import Link from 'next/link';
 
-export default function LoginPage() {
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { signIn } from 'next-auth/react';
+import { useAuth } from '../../context/AuthContext'; 
+
+export default function SigninPage() {
+  const { setUser } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const router = useRouter();
+
+  const handleGoogleLogin = async () => {
+    // Use the `signIn` function from next-auth for the Google provider.
+    // Set a callbackUrl to tell NextAuth where to go after success.
+    // This will cause a page reload, triggering AuthContext's useEffect.
+    console.log("google login triggered")
+    const signUSer = await signIn('google', { callbackUrl: '/about' });
+    console.log({signUSer})
+  };
 
   const handleCredentialsLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await signIn('credentials', {
-      redirect: false,
-      email,
-      password,
-    });
+    setError('');
 
-    console.log(res)
-    if (!res?.ok) setError('Invalid email or password')
-    else console.log("signed in with user ", email)
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/signin`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+          credentials: 'include',
+        }
+      );
+
+      const userData = await res.json();
+      if (!res.ok) {
+        throw new Error('Invalid email or password');
+      }
+
+      setUser(userData); // Update the global state with the returned user
+      // router.push('/'); // Redirect to a protected page
+      setError("successfully signed in!")
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unexpected error occurred');
+      }
+    }
   };
 
   return (
@@ -27,7 +60,7 @@ export default function LoginPage() {
         <h2 className="text-center text-2xl font-bold">Sign in</h2>
 
         <div className="space-y-2">
-          <button onClick={() => signIn('google')} className="w-full bg-red-500 text-white py-2 rounded">
+          <button onClick={handleGoogleLogin} className="w-full bg-red-500 text-white py-2 rounded">
             Sign in with Google
           </button>
         </div>

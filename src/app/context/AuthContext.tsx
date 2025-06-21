@@ -1,9 +1,7 @@
-"use client"; // Context is a client-side feature, so this file must be a client component.
+"use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { jwtDecode } from 'jwt-decode'; // A library to decode JWTs
 
-// Define the shape of the data stored in our context
 interface User {
   userId: string;
   username: string;
@@ -15,45 +13,41 @@ interface AuthContextType {
   isLoading: boolean;
 }
 
-// 1. Create the Context
-// The initial value is undefined because we won't have the user info right away.
+// create the Context and Provider Component
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// 2. Create the Provider Component
-// This component will wrap our entire application and provide the context to all children.
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // On initial load, check if a token exists in local storage
   useEffect(() => {
-    try {
-      const token = localStorage.getItem('jwt_token');
-      if (token) {
-        // Decode the token to get user information
-        const decodedUser: User = jwtDecode(token);
-        setUser(decodedUser);
+    async function checkUserStatus() {
+      try {
+        // handles forwarding the cookie to the NestJS backend.
+        const response = await fetch('/api/auth/session');
+
+        if (response.ok) {
+          const userData = await response.json();
+          setUser(userData);
+        } else {
+          setUser(null);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user status", error);
+        setUser(null);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error("Failed to decode token", error);
-      // If token is invalid, ensure user state is null
-      setUser(null);
-    } finally {
-      setIsLoading(false);
     }
+    checkUserStatus();
   }, []);
 
-  const value = {
-    user,
-    setUser,
-    isLoading,
-  };
+  const value = { user, setUser, isLoading };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-// 3. Create the Custom Hook
-// This is the hook our components will use to access the context's values.
+// This is the custom hook components will use to access the context's values.
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {

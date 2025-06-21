@@ -1,8 +1,6 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import Credentials from "next-auth/providers/credentials";
 import axios from "axios";
-import jwt from 'jsonwebtoken';
 
 export const authOptions = {
   providers: [
@@ -10,38 +8,21 @@ export const authOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
-    Credentials({
-      name: "Credentials",
-      credentials: {
-        email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials) {
-        // console.log("THIS RUNS ON SIGN IN WITH CREDS ", credentials)
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/signin`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(credentials),
-          }
-        );
-        
-        const user = await res.json();
-        // console.log(res)
-        // console.log({user})
-
-        if (res.ok && user) return user;
-        return null;
-      },
-    }),
   ],
+  // --- THIS IS THE ADDED CONFIGURATION ---
+  // Explicitly tell NextAuth.js to use the "jwt" strategy for sessions.
+  // This ensures the jwt and session callbacks are always used.
+  session: {
+    strategy: "jwt",
+  },
   callbacks: {
     async jwt({ token, account, profile }) {
-      console.log('THIS IS JWT RUNNING ++++')
+      console.log("THIS IS JWT RUNNING ++++");
+      // console.log({account})
+      // console.log({profile})
       if (account && profile) {
         try {
-          const userRes = await axios.post(
+          const user = await axios.post(
             `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/users/oauth`,
             {
               email: profile.email,
@@ -52,21 +33,42 @@ export const authOptions = {
             }
           );
 
-          console.log("user res", userRes?.data);
-          token.userId = userRes.data._id;
-        } catch (err) {
-          console.error("Error syncing user with backend:", err.message);
+          // console.log({ user });
+          // call NestJS to create a cookie-based session
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/provider`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email: profile.email }),
+            }
+          );
+
+          const userData = await res.json();
+          // console.log({userData})
+          console.log("CALLED PROVIDER CONTROLER ++++");
+          return userData;
+        } catch (err: unknown) {
+          if (err && typeof err === "object" && "message" in err) {
+            console.error("Error during social sign-in bridge:", err.message);
+            return { ...token, error: "SocialSignInError" };
+          } else {
+            console.error("Error syncing user with backend:", err);
+          }
         }
       }
-
       return token;
     },
     async session({ session, token }) {
-      session.userId = token.userId;
+      console.log({token})
+      if (token.userId) {
+        session.userId = token.userId;
+      }
+      console.log({ session });
       return session;
     },
   },
-  secret: process.env.AUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
 };
 export const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
