@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { useAuth } from "../context/AuthContext"; // Your custom AuthContext hook
-import SignOutButton from "./SignOutButton"; // The dedicated sign-out button component
+import { useAuth } from "../context/AuthContext";
+import SignOutButton from "./SignOutButton";
 
 // Helper components for mobile menu icons
 // function MenuIcon(props: React.ComponentProps<"svg">) {
@@ -25,8 +25,10 @@ import SignOutButton from "./SignOutButton"; // The dedicated sign-out button co
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { user, isLoading } = useAuth(); // Get user state and loading status
+  const { user, isLoading, signOut } = useAuth(); // Get user state and loading status
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  console.log({user})
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
@@ -34,6 +36,11 @@ export default function Navbar() {
     { href: "/", label: "Home" },
     { href: "/about", label: "About" },
   ];
+
+  const handleMobileSignOut = async () => {
+    await signOut();
+    closeMobileMenu();
+  };
 
   return (
     <nav className="bg-white shadow-md w-full fixed top-0 left-0 z-50">
@@ -72,7 +79,7 @@ export default function Navbar() {
             ) : user ? (
               <>
                 <Link
-                  href={`/users/${user.username}`}
+                  href={`/users/${user.name}`}
                   className="text-sm font-medium text-gray-700 hover:text-indigo-600"
                 >
                   My Profile
@@ -126,7 +133,7 @@ export default function Navbar() {
               ) : user ? (
                 <div className="px-2 space-y-1">
                   <Link
-                    href={`/users/${user.username}`}
+                    href={`/users/${user.name}`}
                     onClick={closeMobileMenu}
                     className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50"
                   >
@@ -134,16 +141,10 @@ export default function Navbar() {
                   </Link>
                   {/* We can't use the button component directly as it doesn't close the menu, so we replicate its logic */}
                   <button
-                    onClick={() => {
-                      // Find the button in the DOM and click it. A bit of a hack but effective.
-                      // Or better yet, just call the signOut logic directly.
-                      const signOutButton = document.getElementById('desktop-signout-button');
-                      signOutButton?.click();
-                      closeMobileMenu();
-                    }}
+                    onClick={handleMobileSignOut}
                     className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50"
                   >
-                    <SignOutButton />
+                    Sign Out
                   </button>
                 </div>
               ) : (

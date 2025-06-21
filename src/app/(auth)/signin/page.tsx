@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
-import { useAuth } from '../../context/AuthContext'; 
 
 
 export default function SigninPage() {
@@ -12,7 +11,6 @@ export default function SigninPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
-  const { setUser } = useAuth();
 
   const handleGoogleLogin = async () => {
     await signIn('google', { callbackUrl: '/bridge' });
@@ -33,12 +31,10 @@ export default function SigninPage() {
         }
       );
 
-      const userData = await res.json();
       if (!res.ok) {
         throw new Error('Invalid email or password');
       }
 
-      setUser(userData); // Update the global state with the returned user
       // router.push('/'); // Redirect to a protected page
       setError("successfully signed in!")
     } catch (err: unknown) {

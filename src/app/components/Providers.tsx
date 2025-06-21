@@ -8,10 +8,10 @@ import { ReactNode } from "react";
 
 export default function Providers({ children }: { children: ReactNode }) {
   return (
-    <AuthProvider>
-      <SessionProvider>
+    <SessionProvider>
+      <AuthProvider>
         {children}
-      </SessionProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </SessionProvider>
   );
 }

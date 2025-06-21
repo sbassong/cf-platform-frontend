@@ -3,6 +3,20 @@ import Google from "next-auth/providers/google";
 import axios from "axios";
 import { type NextAuthConfig } from "next-auth";
 
+// Extend NextAuth types to include avatarUrl
+declare module "next-auth" {
+  interface User {
+    avatarUrl?: string;
+  }
+  interface Session {
+    user?: {
+      avatarUrl?: string;
+      email?: string;
+      name?: string;
+    };
+  }
+}
+
 export const config = {
   providers: [
     Google({
@@ -16,7 +30,7 @@ export const config = {
   callbacks: {
     async signIn({ user, account, profile }) {
       console.log("SIGN IN CALLBACK RUNNING ++++");
-      if (account && profile?.email) {
+      if (account?.provider === "google" && profile?.email) {
         try {
           await axios.post(
             `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/users/oauth`,
@@ -40,21 +54,19 @@ export const config = {
     },
     async jwt({ token, profile }) {
       console.log("JWT CALLBACK RUNNING ++++");
-      // The user object is only passed on the first sign-in.
-      // We are persisting the email to the token.
       if (profile?.email) {
         token.email = profile.email;
+        token.name = profile.email;
+        token.avatarUrl = profile.picture;
       }
       return token;
     },
     async session({ session, token }) {
-      console.log({ token });
-      // The session callback receives the token.
-      // We are ensuring the session.user object has the email from the token.
       if (token.email && session.user) {
         session.user.email = token.email as string;
+        session.user.name = token.name as string;
+        session.user.avatarUrl = token.avatarUrl as string | undefined;
       }
-      console.log({ session });
       return session;
     },
   },

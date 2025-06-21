@@ -1,53 +1,77 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useSession, signOut as nextAuthSignOut } from 'next-auth/react';
 
 interface User {
-  userId: string;
-  username: string;
+  name: string;
+  email: string;
+  // Add any other fields that are common between your NestJS user and Google user
 }
 
 interface AuthContextType {
   user: User | null;
-  setUser: (user: User | null) => void;
   isLoading: boolean;
+  signOut: () => Promise<void>;
 }
 
-// create the Context and Provider Component
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    async function checkUserStatus() {
-      try {
-        // handles forwarding the cookie to the NestJS backend.
-        const response = await fetch('/api/auth/session');
+  const { data: nextAuthSession, status: nextAuthStatus } = useSession();
 
-        if (response.ok) {
-          const userData = await response.json();
+  // runs when NextAuth status changes or on initial load
+  useEffect(() => {
+    const checkBackendSession = async () => {
+      try {
+        const res = await fetch('/api/auth/session');;
+        if (res.ok) {
+          const userData = await res.json();
           setUser(userData);
         } else {
           setUser(null);
         }
       } catch (error) {
-        console.error("Failed to fetch user status", error);
+        console.error("No active backend session found.");
         setUser(null);
       } finally {
         setIsLoading(false);
       }
-    }
-    checkUserStatus();
-  }, []);
+    };
 
-  const value = { user, setUser, isLoading };
+    if (nextAuthStatus === 'authenticated' && nextAuthSession?.user) {
+      // Priority 1: User is logged in with NextAuth
+      setUser({
+        name: nextAuthSession.user.name ?? "User",
+        email: nextAuthSession.user.email ?? "",
+      });
+      setIsLoading(false);
+    } else if (nextAuthStatus !== 'loading') {
+      // Priority 2: NextAuth is done loading and there's no user,
+      // so we check for a session from backend.
+      checkBackendSession();
+    }
+  }, [nextAuthSession, nextAuthStatus]);
+
+  const signOut = async () => {
+    // Sign out from the NestJS backend
+    await fetch(`${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/signout`, {
+      method: 'POST',
+      credentials: 'include', // required for browser to send cookie with req
+    });
+    // Sign out from NextAuth
+    await nextAuthSignOut({ redirect: true, callbackUrl: '/signin' });
+    setUser(null);
+  };
+
+  const value = { user: user, isLoading, signOut };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-// This is the custom hook components will use to access the context's values.
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
