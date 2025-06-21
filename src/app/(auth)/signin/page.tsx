@@ -6,20 +6,16 @@ import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { useAuth } from '../../context/AuthContext'; 
 
+
 export default function SigninPage() {
-  const { setUser } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
+  const { setUser } = useAuth();
 
   const handleGoogleLogin = async () => {
-    // Use the `signIn` function from next-auth for the Google provider.
-    // Set a callbackUrl to tell NextAuth where to go after success.
-    // This will cause a page reload, triggering AuthContext's useEffect.
-    console.log("google login triggered")
-    const signUSer = await signIn('google', { callbackUrl: '/about' });
-    console.log({signUSer})
+    await signIn('google', { callbackUrl: '/bridge' });
   };
 
   const handleCredentialsLogin = async (e: React.FormEvent) => {

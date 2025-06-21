@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 
 export async function GET() {
   const cookieStore = await cookies();
-  const token = cookieStore.get('access_token')?.value; // extract token
+  const token = cookieStore.get('access_token')?.value;
 
   // user is not authenticated if no token found
   if (!token) {
@@ -19,8 +19,7 @@ export async function GET() {
       headers: {
         'Cookie': `access_token=${token}`,
       },
-      // Important for server components to avoid overly aggressive caching
-      cache: 'no-store',
+      cache: 'no-store', // avoid overly aggressive caching
     });
 
     const userData = await response.json();
@@ -43,6 +42,3 @@ export async function GET() {
     );
   }
 }
-
-
-// ACCESS TOKEN NOT BEING READ? 404 ON SESSION CHECK
