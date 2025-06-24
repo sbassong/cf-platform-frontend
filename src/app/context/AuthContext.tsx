@@ -3,10 +3,11 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useSession, signOut as nextAuthSignOut } from 'next-auth/react';
 
+
 interface User {
   name: string;
   email: string;
-  // Add any other fields that are common between your NestJS user and Google user
+  // will add any other fields that are common between your NestJS user and Google user
 }
 
 interface AuthContextType {
@@ -23,11 +24,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const { data: nextAuthSession, status: nextAuthStatus } = useSession();
 
-  // runs when NextAuth status changes or on initial load
   useEffect(() => {
     const checkBackendSession = async () => {
       try {
-        const res = await fetch('/api/auth/session');;
+        const res = await fetch('/api/auth/session');
         if (res.ok) {
           const userData = await res.json();
           setUser(userData);
@@ -57,12 +57,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [nextAuthSession, nextAuthStatus]);
 
   const signOut = async () => {
-    // Sign out from the NestJS backend
+    // sign out from the NestJS backend (since custom cookie was set)
     await fetch(`${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/signout`, {
       method: 'POST',
-      credentials: 'include', // required for browser to send cookie with req
+      credentials: 'include',
     });
-    // Sign out from NextAuth
+    // and sign out from NextAuth
     await nextAuthSignOut({ redirect: true, callbackUrl: '/signin' });
     setUser(null);
   };

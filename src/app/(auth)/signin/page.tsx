@@ -35,8 +35,7 @@ export default function SigninPage() {
         throw new Error('Invalid email or password');
       }
 
-      // router.push('/'); // Redirect to a protected page
-      setError("successfully signed in!")
+      router.push('/');
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);

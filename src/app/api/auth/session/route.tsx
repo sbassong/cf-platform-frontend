@@ -4,10 +4,9 @@ import { cookies } from 'next/headers';
 export async function GET() {
   const cookieStore = await cookies();
   const token = cookieStore.get('access_token')?.value;
-
-  // user is not authenticated if no token found
+  
   if (!token) {
-    return NextResponse.json(
+      return NextResponse.json(
       { message: 'Authentication required.' },
       { status: 401 },
     );

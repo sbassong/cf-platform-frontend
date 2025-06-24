@@ -3,7 +3,6 @@ import Google from "next-auth/providers/google";
 import axios from "axios";
 import { type NextAuthConfig } from "next-auth";
 
-// Extend NextAuth types to include avatarUrl
 declare module "next-auth" {
   interface User {
     avatarUrl?: string;
@@ -29,10 +28,12 @@ export const config = {
   },
   callbacks: {
     async signIn({ user, account, profile }) {
-      console.log("SIGN IN CALLBACK RUNNING ++++");
-      if (account?.provider === "google" && profile?.email) {
+      if (account?.provider === "google") {
+        if (!profile?.email) {
+          return false;
+        }
         try {
-          await axios.post(
+          const oauthRes = await axios.post(
             `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/users/oauth`,
             {
               email: profile.email,
@@ -42,21 +43,20 @@ export const config = {
               providerId: user.id, // 'sub' from the JWT is typically the user.id
             }
           );
-          return true; // Return true to continue the sign-in process
+          console.log({oauthRes})
+          return oauthRes
+          return true;
         } catch (err: any) {
           console.error("Error syncing OAuth user with backend:", err.message);
-          // To send the error to the client, you can return a redirect URL
-          // Or return false to stop the sign-in process
           return false;
         }
       }
-      return false; // Deny sign-in if account or profile is missing
+      return true;
     },
     async jwt({ token, profile }) {
-      console.log("JWT CALLBACK RUNNING ++++");
       if (profile?.email) {
         token.email = profile.email;
-        token.name = profile.email;
+        token.name = profile.name;
         token.avatarUrl = profile.picture;
       }
       return token;
@@ -70,7 +70,7 @@ export const config = {
       return session;
     },
   },
-  secret: process.env.AUTH_SECRET,
+  // secret: process.env.AUTH_SECRET, // not needed with v5
 } satisfies NextAuthConfig;
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config);

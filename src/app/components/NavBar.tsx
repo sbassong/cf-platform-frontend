@@ -28,8 +28,6 @@ export default function Navbar() {
   const { user, isLoading, signOut } = useAuth(); // Get user state and loading status
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  console.log({user})
-
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   const navLinks = [
@@ -139,7 +137,7 @@ export default function Navbar() {
                   >
                     My Profile
                   </Link>
-                  {/* We can't use the button component directly as it doesn't close the menu, so we replicate its logic */}
+                  {/* can't use the button component directly as it doesn't close the menu, so we replicate its logic */}
                   <button
                     onClick={handleMobileSignOut}
                     className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50"

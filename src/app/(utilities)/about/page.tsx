@@ -1,4 +1,4 @@
-import Image from 'next/image'; // Using the optimized Image component from Next.js
+// import Image from 'next/image'; // Using the optimized Image component from Next.js
 import Link from 'next/link';
 
 export default function AboutPage() {

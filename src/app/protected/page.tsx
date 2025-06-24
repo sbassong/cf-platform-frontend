@@ -30,10 +30,10 @@ export default function ProtectedPage() {
         <h1 className="text-2xl font-semibold">Welcome to the Protected Page!</h1>
         <p className="mt-2">This content is only visible to logged-in users.</p>
         <p className="mt-4">
-          Your Username: <span className="font-mono bg-gray-100 p-1 rounded">{user.username}</span>
+          Your Username: <span className="font-mono bg-gray-100 p-1 rounded">{user.name}</span>
         </p>
         <p>
-          Your User ID: <span className="font-mono bg-gray-100 p-1 rounded">{user.userId}</span>
+          Your User ID: <span className="font-mono bg-gray-100 p-1 rounded">{user.email}</span>
         </p>
 
         <div className="mt-6">
