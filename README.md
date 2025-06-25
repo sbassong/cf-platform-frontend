@@ -6,7 +6,8 @@
   </a> -->
   <h3 align="center">Next.js Frontend for the Child-Free Community Platform</h3>
   <p align="center">
-    A modern, full-stack web application built with Next.js, Auth.js (NextAuth.js v5), and TypeScript, featuring a hybrid authentication system to bridge NextAuth.js sessions with a custom backend.
+    A modern, full-stack web application built with Next.js, Auth.js (NextAuth.js v5), and TypeScript, featuring a hybrid authentication system to bridge NextAuth.js sessions with a 
+    <a href="https://github.com/sbassong/cf-platform-backend">custom Nest.js backend</a>.
     <br />
     <br />
     <a href="#">View Demo</a>
