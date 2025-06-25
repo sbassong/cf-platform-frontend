@@ -32,6 +32,7 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
+    <li><a href="#running-tests">Running Tests</a></li>
     <li><a href="#architecture-overview">Architecture Overview</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#license">License</a></li>
@@ -61,6 +62,7 @@ This project is built with a modern, type-safe, and performant technology stack.
 * [Auth.js](https://authjs.dev/getting-started)
 * [TailwindCSS](https://tailwindcss.com/)
 * [Axios](https://axios-http.com/docs/intro)
+* [Cypress](https://docs.cypress.io/app/get-started/why-cypress)
 
 ## Getting Started
 
@@ -117,13 +119,41 @@ NEXT_PUBLIC_LOCAL_BACKEND_URL="http://localhost:3001"
 
 Once the environment variables are set, you can run the development server:
 
-```bash
+```sh
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. The page will auto-update as you edit the files.
 
 ---
+
+## Running Tests
+
+This project uses Cypress for end-to-end (E2E) testing to ensure the reliability of key user flows.
+
+### End-to-End Tests
+
+The E2E test suite currently covers the following scenarios:
+* **Authentication**: Signin and signup with credentials, mock provider signin, and signout.
+
+
+### How to Run E2E Tests
+
+1. **Start the development server**: Before running tests, ensure your Next.js application is running.
+
+    ```sh
+    npm run dev
+    ```
+
+2. **Open the Cypress Test Runner**: In a separate terminal window, from the project root, run the following command:
+
+    ```sh
+    npx cypress open
+    ```
+
+3. In the Cypress dashboard, choose **E2E Testing**, select your preferred browser, and click on `auth.cy.ts` to execute the authentication test suite.
+
+
 
 ## Architecture Overview
 
@@ -153,9 +183,8 @@ This is a critical component of the hybrid system.
 - **`AuthBridgeClient.tsx`**  
   A client component that receives the session data and makes a fetch request to the NestJS backend, prompting it to set its own `access_token` cookie. This synchronizes the user's session across both systems.
 
-### Protected Routes (`/src/app/protected/page.tsx`)
-
-An example of a protected page that uses the `useAuth` hook to redirect unauthenticated users to the sign-in page.
+### Testing (`/cypress`): 
+Contains all end-to-end tests. Also contains `support/commands.ts` which contains reusable and custom commands imported through support file `support/e2e.ts`.
 
 ---
 
