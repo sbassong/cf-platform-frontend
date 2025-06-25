@@ -1,10 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { signIn } from 'next-auth/react';
-import Link from 'next/link';
-
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import Link from "next/link";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -15,25 +14,27 @@ export default function SignUpPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
     setError(null);
 
     if (password !== confirm) {
-      return setError("Passwords must match.")
+      return setError("Passwords must match.");
     }
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/signup`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password }),
+        }
+      );
 
       if (res.ok) {
-        router.push("/login"); // Redirect on success
+        router.push("/signin");
       } else {
         const errorData = await res.json();
         setError(errorData.message || "Failed to sign up.");
@@ -62,6 +63,7 @@ export default function SignUpPage() {
             onChange={(e) => setName(e.target.value)}
             className="w-full border border-gray-300 rounded-xl p-3"
             required
+            data-cy="signup-name"
           />
 
           <input
@@ -72,6 +74,7 @@ export default function SignUpPage() {
             onChange={(e) => setEmail(e.target.value)}
             className="w-full border border-gray-300 rounded-xl p-3"
             required
+            data-cy="signup-email"
           />
 
           <input
@@ -82,6 +85,7 @@ export default function SignUpPage() {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full border border-gray-300 rounded-xl p-3"
             required
+            data-cy="signup-password"
           />
 
           <input
@@ -92,11 +96,13 @@ export default function SignUpPage() {
             onChange={(e) => setConfirm(e.target.value)}
             className="w-full border border-gray-300 rounded-xl p-3"
             required
+            data-cy="signup-confirm-password"
           />
 
           <button
             type="submit"
             className="w-full bg-blue-600 text-white rounded-xl p-3 font-semibold hover:bg-blue-700"
+            data-cy="signup-submit"
           >
             {isLoading ? "Signing Up..." : "Sign Up"}
           </button>
@@ -106,15 +112,16 @@ export default function SignUpPage() {
 
         <div className="flex flex-col gap-3">
           <button
-            onClick={() => signIn('google')}
+            onClick={() => signIn("google")}
             className="w-full border border-gray-300 rounded-xl p-3 hover:bg-gray-50"
+            data-cy="google-signup-button"
           >
             Sign up with Google
           </button>
         </div>
 
         <p className="text-center text-sm text-gray-600">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link href="/signin" className="text-blue-600 font-medium">
             Sign in
           </Link>
@@ -123,4 +130,3 @@ export default function SignUpPage() {
     </div>
   );
 }
-
