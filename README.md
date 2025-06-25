@@ -1,36 +1,182 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Child-Free Platform - Frontend
+
+<p align="center">
+  <!-- <a href="#">
+    <img src="https://raw.githubusercontent.com/authjs/next-auth/main/docs/static/img/logo.svg" alt="Logo" width="80" height="80">
+  </a> -->
+  <h3 align="center">Next.js Frontend for the Child-Free Community Platform</h3>
+  <p align="center">
+    A modern, full-stack web application built with Next.js, Auth.js (NextAuth.js v5), and TypeScript, featuring a hybrid authentication system to bridge NextAuth.js sessions with a custom backend.
+    <br />
+    <br />
+    <a href="#">View Demo</a>
+  </p>
+</p>
+
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#environment-variables">Environment Variables</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#architecture-overview">Architecture Overview</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#license">Contact</a></li>
+  </ol>
+</details>
+
+---
+
+## About The Project
+
+This repository contains the frontend portion of the **CF Platform**, a social application designed for the child-free community. It is a modern Next.js application featuring a hybrid authentication system that integrates two distinct session management strategies.
+
+The key architectural highlights include:
+
+* **Google OAuth Login**: Securely managed end-to-end using **Auth.js (NextAuth.js v5)**, which handles the OAuth 2.0 flow and its own server-side session management.
+* **Credentials-Based Authentication**: Traditional email and password sign-in and sign-up are handled by a separate **NestJS backend service**. This frontend communicates directly with it for these tasks.
+* **Hybrid Session Synchronization**: A unique "bridge" page architecture ensures a unified user experience. After a successful Google login via NextAuth.js, the user is seamlessly redirected to create a parallel, cookie-based session with the NestJS backend, ensuring consistent authentication state across the entire platform.
+
+### Built With
+
+This project is built with a modern, type-safe, and performant technology stack.
+
+* [Next.js](https://nextjs.org/docs)
+* [React](https://react.dev/learn)
+* [TypeScript](https://www.typescriptlang.org/docs/handbook/typescript-from-scratch.html)
+* [Auth.js](https://authjs.dev/getting-started)
+* [TailwindCSS](https://tailwindcss.com/)
+* [Axios](https://axios-http.com/docs/intro)
 
 ## Getting Started
 
-First, run the development server:
+To get a local copy up and running, follow these steps.
+
+### Prerequisites
+
+You must have Node.js (version 22.x or higher) and npm installed on your machine.
+
+* npm
+    ```sh
+    npm install npm@latest -g
+    ```
+
+### Installation
+
+1.  Clone the repo
+    ```sh
+    git clone https://github.com/sbassong/cf-platform-frontend.git
+    ```
+2.  Navigate into the project directory
+    ```sh
+    cd cf-platform-frontend
+    ```
+3.  Install NPM packages
+    ```sh
+    npm install
+    ```
+
+### Environment Variables
+
+This project requires several environment variables to run. Create a file named `.env.local` in the root of your project and add the following variables.
+
+```env
+# Auth.js (NextAuth.js) Secret
+# A long, random string used to encrypt the session JWT.
+# Generate one with: openssl rand -base64 32
+AUTH_SECRET="your-super-secret-string-for-next-auth"
+
+# Google OAuth Credentials
+# Get these from your project in the Google Cloud Console.
+GOOGLE_CLIENT_ID="your-google-client-id.apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
+
+# Auth.js (NextAuth.js) Configuration
+# The canonical URL of your Next.js application. Required for OAuth redirects.
+NEXTAUTH_URL="http://localhost:3000"
+
+# Backend API URL
+# The URL for your corresponding NestJS backend service.
+NEXT_PUBLIC_LOCAL_BACKEND_URL="http://localhost:3001"
+```
+## Usage
+
+Once the environment variables are set, you can run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. The page will auto-update as you edit the files.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Architecture Overview
 
-## Learn More
+### Authentication (`/auth.ts`)
 
-To learn more about Next.js, take a look at the following resources:
+The core of the Google OAuth integration is managed here. It uses **Auth.js v5** and defines the providers and callbacks required for the login flow and session management.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### API Routes (`/src/app/api/`)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **`api/auth/[...nextauth]/route.ts`**  
+  This file exposes the Auth.js handlers to the Next.js routing system, enabling features like sign-in, sign-out, and session retrieval for NextAuth.
 
-## Deploy on Vercel
+- **`api/auth/session/route.tsx`**  
+  A custom proxy endpoint used by the `AuthContext` to check the status of a user's session with the NestJS backend.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Session Management (`/src/app/context/AuthContext.tsx`)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+A custom React context that creates a unified authentication state. It checks for either a NextAuth.js session (for Google users) or a NestJS session (for credentials users) and provides a consistent `user` object and `isLoading` state to the entire application.
+
+### Session Bridge (`/src/app/(auth)/bridge`)
+
+This is a critical component of the hybrid system.
+
+- **`page.tsx`**  
+  A server component that runs immediately after a successful Google login. It uses the server-side `auth()` helper to get the session and passes it to the client component.
+
+- **`AuthBridgeClient.tsx`**  
+  A client component that receives the session data and makes a fetch request to the NestJS backend, prompting it to set its own `access_token` cookie. This synchronizes the user's session across both systems.
+
+### Protected Routes (`/src/app/protected/page.tsx`)
+
+An example of a protected page that uses the `useAuth` hook to redirect unauthenticated users to the sign-in page.
+
+---
+
+## Roadmap
+
+- [ ] Implement user profile editing.
+- [ ] Develop a real-time chat feature.
+- [ ] Add event creation and RSVPs.
+- [ ] Build out a forum/discussion board.
+
+See the [open issues](https://github.com/sbassong/cf-platform-frontend/issues) for a full list of proposed features (and known issues).
+
+---
+
+## License
+
+Distributed under the MIT License. See `LICENSE.txt` for more information.
+
+---
+
+## Contact
+
+Samuel Bassong – sam.bassong@gmail.com - [linkedin.com/in/sambassong](https://www.linkedin.com/in/sambassong/)
+
+Project Link: [https://github.com/sbassong/cf-platform-frontend](https://github.com/sbassong/cf-platform-frontend)
