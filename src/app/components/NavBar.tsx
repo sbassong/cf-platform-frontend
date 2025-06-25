@@ -60,8 +60,8 @@ export default function Navbar() {
                   key={link.label}
                   href={link.href}
                   className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${isActive
-                      ? "text-white bg-indigo-600"
-                      : "text-gray-700 hover:bg-gray-100"
+                    ? "text-white bg-indigo-600"
+                    : "text-gray-700 hover:bg-gray-100"
                     }`}
                 >
                   {link.label}
@@ -79,6 +79,7 @@ export default function Navbar() {
                 <Link
                   href={`/users/${user.name}`}
                   className="text-sm font-medium text-gray-700 hover:text-indigo-600"
+                  data-cy="profile-link"
                 >
                   My Profile
                 </Link>

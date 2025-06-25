@@ -25,7 +25,7 @@ export default function AuthBridgeClient({ session }: { session: Session | null 
             throw new Error(errorData.message || 'Failed to create session with backend.');
           }
 
-          window.location.href = '/about';
+          window.location.href = '/';
 
         } catch (err: any) {
           setError(err.message || 'Could not complete sign-in. Please try again.');
