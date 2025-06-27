@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react';
 import { useSession, signOut as nextAuthSignOut } from 'next-auth/react';
-
-
-interface User {
-  name: string;
-  email: string;
-  // will add any other fields that are common between your NestJS user and Google user
-}
+import type { User } from '@/types';
 
 interface AuthContextType {
   user: User | null;
@@ -27,15 +27,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const checkBackendSession = async () => {
       try {
-        const res = await fetch('/api/auth/session');
+        const res = await fetch('/api/auth/session', {
+          credentials: 'include',
+        });
         if (res.ok) {
-          const userData = await res.json();
+          const userData: User = await res.json();
           setUser(userData);
         } else {
           setUser(null);
         }
       } catch (error) {
-        console.error("No active backend session found.");
+        console.error('No active backend session found.');
         setUser(null);
       } finally {
         setIsLoading(false);
@@ -43,31 +45,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     if (nextAuthStatus === 'authenticated' && nextAuthSession?.user) {
-      // Priority 1: User is logged in with NextAuth
-      setUser({
-        name: nextAuthSession.user.name ?? "User",
-        email: nextAuthSession.user.email ?? "",
-      });
-      setIsLoading(false);
+      // If there's a NextAuth session, we still need to fetch the full
+      // user object from our backend to get the profile information.
+      checkBackendSession();
     } else if (nextAuthStatus !== 'loading') {
-      // Priority 2: NextAuth is done loading and there's no user,
-      // so we check for a session from backend.
+      // If NextAuth is done and there's no session, check for a credentials-based session.
       checkBackendSession();
     }
   }, [nextAuthSession, nextAuthStatus]);
 
   const signOut = async () => {
-    // sign out from the NestJS backend (since custom cookie was set)
+    // Sign out from the NestJS backend
     await fetch(`${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/signout`, {
       method: 'POST',
       credentials: 'include',
     });
-    // and sign out from NextAuth
-    await nextAuthSignOut({ redirect: true, callbackUrl: '/signin' });
+
+    // Sign out from NextAuth.js if it was a Google session
+    if (nextAuthSession) {
+      await nextAuthSignOut({ redirect: true, callbackUrl: '/signin' });
+    }
+
     setUser(null);
+    window.location.href = '/signin';
   };
 
-  const value = { user: user, isLoading, signOut };
+  const value = { user, isLoading, signOut };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

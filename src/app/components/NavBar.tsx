@@ -40,6 +40,7 @@ export default function Navbar() {
     closeMobileMenu();
   };
 
+  console.log("navBar user: ", {user})
   return (
     <nav className="bg-white shadow-md w-full fixed top-0 left-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -74,14 +75,15 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-4">
             {isLoading ? (
               <div className="w-24 h-8 bg-gray-200 rounded-md animate-pulse"></div>
-            ) : user ? (
+            ) : user && user.profile ? (
               <>
                 <Link
-                  href={`/users/${user.name}`}
+                  href={`/profiles/${user.profile.username}`}
                   className="text-sm font-medium text-gray-700 hover:text-indigo-600"
                   data-cy="profile-link"
                 >
-                  My Profile
+                  {/* My Profile */}
+                  Welcome, {user.profile.displayName}
                 </Link>
                 <SignOutButton />
               </>
@@ -129,14 +131,14 @@ export default function Navbar() {
             <div className="border-t border-gray-200 pt-4 mt-4">
               {isLoading ? (
                 <div className="w-full h-10 bg-gray-200 rounded-md animate-pulse"></div>
-              ) : user ? (
+              ) : user && user.profile ? (
                 <div className="px-2 space-y-1">
                   <Link
-                    href={`/users/${user.name}`}
+                    href={`/profiles/${user.profile.username}`}
                     onClick={closeMobileMenu}
                     className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50"
                   >
-                    My Profile
+                    Welcome, {user.profile.displayName}
                   </Link>
                   {/* can't use the button component directly as it doesn't close the menu, so we replicate its logic */}
                   <button

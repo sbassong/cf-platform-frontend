@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "../context/AuthContext"; // Your global auth context
+import { useAuth } from "../context/AuthContext";
 
 export default function SignOutButton() {
   const { signOut } = useAuth();

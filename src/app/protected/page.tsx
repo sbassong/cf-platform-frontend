@@ -1,9 +1,8 @@
 'use client';
+
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '../context/AuthContext'; 
-import SignOutButton from '../components/SignOutButton';
-
+import { useAuth } from '../context/AuthContext';
 
 export default function ProtectedPage() {
   const { user, isLoading } = useAuth();
@@ -15,35 +14,64 @@ export default function ProtectedPage() {
     }
   }, [user, isLoading, router]);
 
-  if (isLoading) {
+  if (isLoading || !user) {
+    // While loading, or if user is null (before redirect happens),
+    // show a loading state. This prevents the page content from
+    // flashing for unauthenticated users.
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p>Loading session...</p>
-      </div>
-    );
-  }
-
-  // check for 'user' here to prevent a brief flash of content before the redirect happens.
-  if (user) {
-    return (
-      <div className="p-6">
-        <h1 className="text-2xl font-semibold">Welcome to the Protected Page!</h1>
-        <p className="mt-2">This content is only visible to logged-in users.</p>
-        <p className="mt-4">
-          Your Username: <span className="font-mono bg-gray-100 p-1 rounded">{user.name}</span>
-        </p>
-        <p>
-          Your User ID: <span className="font-mono bg-gray-100 p-1 rounded">{user.email}</span>
-        </p>
-
-        <div className="mt-6">
-          <SignOutButton />
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="text-center">
+          <p className="text-lg font-semibold text-gray-700">Loading...</p>
+          <p className="text-sm text-gray-500">
+            Verifying authentication status.
+          </p>
         </div>
       </div>
     );
   }
 
-  // If there's no user after loading, this will be rendered briefly before the redirect.
-  // Returning null is clean and prevents any content flashing.
-  return null;
+  // If loading is complete and a user exists, render the page content.
+  return (
+    <div className="max-w-4xl mx-auto mt-24 p-6 bg-white rounded-lg shadow-md">
+      <h1 className="text-3xl font-bold text-gray-800 mb-4">
+        Protected Dashboard
+      </h1>
+      <p className="text-gray-600 mb-6">
+        This page is protected. Only authenticated users can see it.
+      </p>
+
+      {/* Display user and profile information */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-gray-700 border-b pb-2">
+          Your Information
+        </h2>
+        <div>
+          <h3 className="text-lg font-medium text-gray-800">
+            Welcome, {user.profile.displayName}!
+          </h3>
+          <p className="text-sm text-gray-500">@{user.profile.username}</p>
+        </div>
+        <div className="bg-gray-50 p-4 rounded-md">
+          <p className="text-gray-700">
+            <span className="font-semibold">Email:</span> {user.email}
+          </p>
+          <p className="text-gray-700">
+            <span className="font-semibold">User Role:</span> {user.role}
+          </p>
+          <p className="text-gray-700">
+            <span className="font-semibold">Profile ID:</span> {user.profile._id}
+          </p>
+          <p className="text-gray-700">
+            <span className="font-semibold">User ID:</span> {user._id}
+          </p>
+        </div>
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold">Raw User Object:</h3>
+          <pre className="bg-gray-800 text-white p-4 rounded-md text-sm overflow-x-auto">
+            {JSON.stringify(user, null, 2)}
+          </pre>
+        </div>
+      </div>
+    </div>
+  );
 }
