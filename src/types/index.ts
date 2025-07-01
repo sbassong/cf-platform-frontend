@@ -31,3 +31,18 @@ export interface User {
   createdAt: string;
   updatedAt: string;
 }
+
+/**
+ * Represents a single post made by a user.
+ * This will be the shape of the data for our Post component
+ */
+export interface Post {
+  _id: string;
+  author: Profile; // The author's profile is nested
+  content: string;
+  imageUrl?: string;
+  likesCount: number;
+  commentsCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
