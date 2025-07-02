@@ -22,7 +22,7 @@ const featuredItems = [
   {
     type: 'Event',
     name: 'Board Game Cafe Takeover',
-    imageUrl: 'https://images.unsplash.com/photo-1585502334829-5f2b053b5a13?q=80&w=2070&auto=format&fit=crop',
+    imageUrl: 'https://images.pexels.com/photos/2356045/pexels-photo-2356045.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2p',
     stat: 'July 25, 2025',
   },
 ];

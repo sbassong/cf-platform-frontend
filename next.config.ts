@@ -27,6 +27,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "www.autotrainingcentre.com",
       },
+      {
+        protocol: "https",
+        hostname: "images.pexels.com",
+      },
+      {
+        protocol: "https",
+        hostname: "cf-platform-assets.s3.us-west-2.amazonaws.com",
+      },
     ],
   },
 };

@@ -7,6 +7,7 @@ export interface Profile {
   username: string;
   displayName: string;
   avatarUrl?: string;
+  bannerUrl?: string;
   bio?: string;
   location?: string;
   interests?: string[];
