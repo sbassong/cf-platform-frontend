@@ -1,17 +1,19 @@
 "use client";
 
 import { useAuth } from "../context/AuthContext";
+import { Button } from "@/components/ui/button";
 
 export default function SignOutButton() {
   const { signOut } = useAuth();
 
   return (
-    <button
+    <Button
       onClick={signOut}
-      className="px-4 py-2 text-sm font-medium text-white bg-indigo-500 rounded-md hover:bg-indigo-600"
+      variant="destructive"
+      size="sm"
       data-cy="signout-button"
     >
       Sign Out
-    </button>
+    </Button>
   );
 }
