@@ -25,7 +25,7 @@ import SignOutButton from "./SignOutButton";
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { user, isLoading, signOut } = useAuth(); // Get user state and loading status
+  const { user, isLoading, signOut } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
@@ -40,7 +40,6 @@ export default function Navbar() {
     closeMobileMenu();
   };
 
-  console.log("navBar user: ", {user})
   return (
     <nav className="bg-white shadow-md w-full fixed top-0 left-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

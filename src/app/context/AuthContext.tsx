@@ -1,14 +1,15 @@
-'use client';
+"use client";
 
 import React, {
   createContext,
   useContext,
   useState,
   useEffect,
+  useRef,
   ReactNode,
-} from 'react';
-import { useSession, signOut as nextAuthSignOut } from 'next-auth/react';
-import type { User } from '@/types';
+} from "react";
+import { signOut as nextAuthSignOut } from "next-auth/react";
+import type { User } from "@/types";
 
 interface AuthContextType {
   user: User | null;
@@ -18,17 +19,25 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const hasFetched = useRef(false);
 
-  const { data: nextAuthSession, status: nextAuthStatus } = useSession();
 
   useEffect(() => {
+    // ref-based guard i to prevent the effect from
+    // running more than once in React's Strict Mode (in development).
+    if (hasFetched.current) {
+      return;
+    }
+    hasFetched.current = true;
+
     const checkBackendSession = async () => {
       try {
-        const res = await fetch('/api/auth/session', {
-          credentials: 'include',
+        const res = await fetch("/api/auth/session", {
+          credentials: "include",
         });
         if (res.ok) {
           const userData: User = await res.json();
@@ -37,37 +46,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUser(null);
         }
       } catch (error) {
-        console.error('No active backend session found.');
+        console.error("No active backend session found.");
         setUser(null);
       } finally {
         setIsLoading(false);
       }
     };
 
-    if (nextAuthStatus === 'authenticated' && nextAuthSession?.user) {
-      // If there's a NextAuth session, we still need to fetch the full
-      // user object from our backend to get the profile information.
-      checkBackendSession();
-    } else if (nextAuthStatus !== 'loading') {
-      // If NextAuth is done and there's no session, check for a credentials-based session.
-      checkBackendSession();
-    }
-  }, [nextAuthSession, nextAuthStatus]);
+    checkBackendSession();
+  }, []);
 
   const signOut = async () => {
-    // Sign out from the NestJS backend
+    const isGoogleSession = document.cookie.includes("authjs.session-token");
+
     await fetch(`${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/signout`, {
-      method: 'POST',
-      credentials: 'include',
+      method: "POST",
+      credentials: "include",
     });
 
-    // Sign out from NextAuth.js if it was a Google session
-    if (nextAuthSession) {
-      await nextAuthSignOut({ redirect: true, callbackUrl: '/signin' });
+    // If it was a Google session, also sign out from NextAuth.js
+    if (isGoogleSession) {
+      await nextAuthSignOut({ redirect: false });
     }
 
     setUser(null);
-    window.location.href = '/signin';
+    window.location.href = "/signin";
   };
 
   const value = { user, isLoading, signOut };
@@ -78,7 +81,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }

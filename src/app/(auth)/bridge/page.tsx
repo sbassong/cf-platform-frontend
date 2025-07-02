@@ -4,6 +4,8 @@
 
 import { auth } from "../../../../auth";
 import AuthBridgeClient from "./AuthBridgeClient";
+import { SessionProvider } from 'next-auth/react';
+
 import { redirect } from 'next/navigation';
 
 export default async function AuthBridgePage() {
@@ -13,5 +15,12 @@ export default async function AuthBridgePage() {
     redirect('/signin?error=SessionNotFound');
   }
 
-  return <AuthBridgeClient session={session} />;
+  // Only AuthBridgeClient needs the session provider
+  // having it here solves issue with multiple fetch
+  // calls to session controller.
+  return (
+    <SessionProvider>
+      <AuthBridgeClient session={session} />
+    </SessionProvider>
+  );
 }
