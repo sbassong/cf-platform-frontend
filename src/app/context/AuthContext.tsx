@@ -27,7 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 
   useEffect(() => {
-    // ref-based guard i to prevent the effect from
+    // ref-based guard to prevent the effect from
     // running more than once in React's Strict Mode (in development).
     if (hasFetched.current) {
       return;
