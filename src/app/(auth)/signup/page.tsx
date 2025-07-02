@@ -3,6 +3,17 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -18,6 +29,10 @@ export default function SignUpPage() {
     event.preventDefault();
     setIsLoading(true);
     setError(null);
+
+    // if (password.length < 8) {
+    //   return setError("Password must be at least 8 characters long");
+    // }
 
     if (password !== confirm) {
       return setError("Passwords must match.");
@@ -55,124 +70,100 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-black rounded-2xl shadow-xl p-8 space-y-6">
-        <h1 className="text-2xl font-bold text-center">Create an Account</h1>
+    <div className="flex items-center justify-center min-h-screen">
+      <Card className="w-full max-w-sm" data-cy="signup-card">
+        <CardHeader>
+          <CardTitle className="text-2xl">Sign Up</CardTitle>
+          <CardDescription>
+            Enter your information to create an account.
+          </CardDescription>
+        </CardHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {error && <p className="text-red-500 text-md text-center">{error}</p>}
+        <form onSubmit={handleSubmit}>
+          <CardContent className="grid gap-5">
+            <div className="grid gap-2">
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                type="text"
+                placeholder="your_unique_username"
+                required
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                data-cy="signup-username"
+              />
+            </div>
 
-          {/* Display Name Field */}
-          <div>
-            <label
-              htmlFor="displayName"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Display Name
-            </label>
-            <input
-              id="displayName"
-              type="text"
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-              required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              data-cy="signup-display-name"
-            />
-          </div>
+            <div className="grid gap-2">
+              <Label htmlFor="displayName">Display Name</Label>
+              <Input
+                id="displayName"
+                type="text"
+                placeholder="Your Name"
+                required
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                data-cy="signup-displayName"
+              />
+            </div>
 
-          {/* Username Field */}
-          <div>
-            <label
-              htmlFor="username"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Username
-            </label>
-            <input
-              id="username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              data-cy="signup-username"
-            />
-          </div>
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="m@example.com"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                data-cy="signup-email"
+              />
+            </div>
 
-          {/* Email Field */}
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Email Address
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              data-cy="signup-email"
-            />
-          </div>
+            <div className="grid gap-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                data-cy="signup-password"
+              />
+            </div>
 
-          {/* Password Field */}
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              data-cy="signup-password"
-            />
-          </div>
+            <div className="grid gap-2">
+              <Label htmlFor="confirm">Password</Label>
+              <Input
+                id="confirm"
+                type="password"
+                required
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+                data-cy="signup-confirm"
+              />
+            </div>
 
-          {/* Confirm Password Field */}
-          <div>
-            <label
-              htmlFor="confirm"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Confirm Password
-            </label>
-            <input
-              id="confirm"
-              type="password"
-              value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
-              required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              data-cy="signup-confirm-password"
-            />
-          </div>
+            {error && (
+              <p className="text-sm text-red-500" data-cy="signup-error">
+                {error}
+              </p>
+            )}
+          </CardContent>
 
-          <button
-            type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 text-white p-3 font-semibold hover:bg-blue-700 disabled:bg-blue-400"
-            data-cy="signup-submit"
-          >
-            {isLoading ? "Creating Account..." : "Sign Up"}
-          </button>
+          <CardFooter className="flex flex-col items-start gap-4 mt-6">
+            <Button type="submit" className="w-full" data-cy="signup-submit">
+              {isLoading ? "Creating Account..." : "Create Account"}
+            </Button>
+            <p className="text-sm text-center w-full">
+              Already have an account?{" "}
+              <Link href="/signin" className="underline">
+                Sign in
+              </Link>
+            </p>
+          </CardFooter>
         </form>
-
-        <p className="text-center text-sm text-gray-600">
-          Already have an account?{" "}
-          <Link href="/signin" className="text-indigo-600 hover:text-indigo-500 font-medium">
-            Sign in
-          </Link>
-        </p>
-      </div>
+      </Card>
     </div>
   );
 }
