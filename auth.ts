@@ -70,7 +70,6 @@ export const config = {
       return session;
     },
   },
-  // secret: process.env.AUTH_SECRET, // not needed with v5
 } satisfies NextAuthConfig;
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config);

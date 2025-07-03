@@ -1,54 +1,141 @@
-// import Image from 'next/image'; // Using the optimized Image component from Next.js
-import Link from 'next/link';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Heart, Target, Users } from "lucide-react";
 
 export default function AboutPage() {
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h1 className="text-3xl font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-            <span className="block">Welcome to</span>
-            <span className="block text-indigo-600">cf app</span>
-          </h1>
-          <p className="mt-5 max-w-md mx-auto text-xl text-gray-500">
-            Your Community. Your Choice. Your Connections.
-          </p>
-        </div>
+    <div className="container max-w-5xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+      {/* 1. Our Mission */}
+      <section className="text-center mb-16">
+        <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
+          A Space to Be Yourself
+        </h1>
+        <p className="mt-4 max-w-2xl mx-auto text-xl text-muted-foreground">
+          We believe everyone deserves a community where they are celebrated for
+          who they are. Our mission is to provide a supportive, engaging, and
+          respectful online home for child-free adults.
+        </p>
+      </section>
 
-        {/* <div className="mt-12 lg:mt-16">
-          <div className="relative w-full h-80 rounded-xl overflow-hidden shadow-2xl">
-            <Image
-              src="http://googleusercontent.com/image_generation_content/3"
-              alt="A diverse group of happy adults enjoying an activity together"
-              layout="fill"
-              objectFit="cover"
-              priority
-            />
+      {/* 2. Our Story */}
+      <section className="mb-16">
+        <h2 className="text-3xl font-bold text-center mb-8">Our Story</h2>
+        <Card className="p-6 md:p-8">
+          <p className="text-lg text-foreground/90 leading-relaxed">
+            The Child-Free Platform was born from a simple observation: in a
+            world largely centered around family life, a dedicated space for
+            adults who have chosen a different path was missing. We saw the need
+            for a social network free from judgment, where conversations,
+            friendships, and activities could flourish around shared experiences
+            and interests, not parental status. We set out to build more than
+            just a platform; we set out to build a community.
+          </p>
+        </Card>
+      </section>
+
+      {/* 3. Our Core Values */}
+      <section className="mb-16">
+        <h2 className="text-3xl font-bold text-center mb-8">Our Values</h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          <Card className="text-center">
+            <CardHeader>
+              <Heart className="h-10 w-10 mx-auto text-primary mb-2" />
+              <CardTitle>Respect</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>
+                We foster an environment of mutual respect for all life choices
+                and backgrounds.
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="text-center">
+            <CardHeader>
+              <Users className="h-10 w-10 mx-auto text-primary mb-2" />
+              <CardTitle>Authenticity</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>
+                We encourage genuine connection by providing a space where you
+                can be your true self.
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="text-center">
+            <CardHeader>
+              <Target className="h-10 w-10 mx-auto text-primary mb-2" />
+              <CardTitle>Support</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>
+                We are a community built on a foundation of support,
+                understanding, and shared experience.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* 4. Meet the Founders */}
+      <section className="mb-16">
+        <h2 className="text-3xl font-bold text-center mb-8">
+          Meet the Founders
+        </h2>
+        <div className="grid md:grid-cols-3 gap-8 text-center">
+          {/* Founder 1 */}
+          <div className="flex flex-col items-center">
+            <Avatar className="h-24 w-24 mb-4">
+              <AvatarImage src="/placeholder-user.jpg" alt="Co-founder 1" />
+              <AvatarFallback>JD</AvatarFallback>
+            </Avatar>
+            <h3 className="text-xl font-semibold">Jane Doe</h3>
+            <p className="text-primary">Co-Founder & CEO</p>
+            <p className="mt-2 text-muted-foreground text-sm">
+              "My goal is for this platform to be a place of joy, connection,
+              and empowerment."
+            </p>
           </div>
-        </div> */}
-
-        <div className="mt-12 lg:mt-16 text-lg text-gray-700 space-y-6 leading-relaxed">
-          <p>
-            <strong>{
-              <Link
-                href="/signin"
-                className=" py-2 text-md font-bold text-indigo-700  hover:text-indigo-500"
-              >
-                cf app
-              </Link>
-            }</strong> was born from a simple idea: to create a dedicated, vibrant, and supportive space for individuals who have chosen to live a life without children. We recognized that while the childfree community is vast and diverse, finding meaningful connections based on shared life choices can sometimes be a challenge.
-          </p>
-          <p>
-            Our mission is to bridge that gap. We are more than just a social app; we are a platform for building genuine friendships, discovering new hobbies, and engaging in conversations that matter to you, free from societal judgment or expectation. Whether you're looking for a travel partner, a book club, local events, or simply a place to share your thoughts with like-minded people, you've found your home.
-          </p>
-          <p>
-            Here, your choice is celebrated. Your lifestyle is understood. Your connections are waiting.
-          </p>
-          <p className="text-center font-semibold text-indigo-600 pt-4">
-            {"Join us and start building the community you've been looking for."}
-          </p>
+          {/* Founder 2 */}
+          <div className="flex flex-col items-center">
+            <Avatar className="h-24 w-24 mb-4">
+              <AvatarImage src="/placeholder-user.jpg" alt="Co-founder 2" />
+              <AvatarFallback>JS</AvatarFallback>
+            </Avatar>
+            <h3 className="text-xl font-semibold">John Smith</h3>
+            <p className="text-primary">Co-Founder & CTO</p>
+            <p className="mt-2 text-muted-foreground text-sm">
+              "We're focused on building a secure, intuitive, and reliable
+              platform for our community."
+            </p>
+          </div>
+          {/* Founder 3 */}
+          <div className="flex flex-col items-center">
+            <Avatar className="h-24 w-24 mb-4">
+              <AvatarImage src="/placeholder-user.jpg" alt="Co-founder 3" />
+              <AvatarFallback>ES</AvatarFallback>
+            </Avatar>
+            <h3 className="text-xl font-semibold">Emily Stone</h3>
+            <p className="text-primary">Co-Founder & CCO</p>
+            <p className="mt-2 text-muted-foreground text-sm">
+              "Every feature is designed to foster authentic connection and a
+              supportive environment."
+            </p>
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* 5. Final CTA */}
+      <section className="text-center bg-muted p-8 rounded-lg">
+        <h2 className="text-3xl font-bold">Join the Conversation</h2>
+        <p className="mt-2 text-muted-foreground">
+          Ready to be a part of our growing community?
+        </p>
+        <Link href="/signup" className="mt-4 inline-block">
+          <Button size="lg">Create Your Account</Button>
+        </Link>
+      </section>
     </div>
   );
 }

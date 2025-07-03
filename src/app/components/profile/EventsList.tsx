@@ -1,36 +1,42 @@
-import { Calendar, MapPin } from 'lucide-react';
+"use client";
 
-const mockEvents = [
-  {
-    id: 1,
-    name: 'Childfree Hikers Monthly Meetup',
-    date: 'July 12, 2025',
-    location: 'Mount Rainier National Park',
-  },
-  {
-    id: 2,
-    name: 'Board Game Cafe Takeover',
-    date: 'July 25, 2025',
-    location: 'The Round Table Cafe',
-  },
-];
+import useSWR from "swr";
+import { fetcher } from "@/lib/api";
+import { Event as EventType } from "@/types";
+import { Loader2 } from "lucide-react";
+import { EventCard } from "../events/EventCard";
 
-// placeholder component to display a mock list of events.
-export default function EventsList() {
+interface EventsListProps {
+  profileId: string;
+}
+
+export default function EventsList({ profileId }: EventsListProps) {
+  // will have a /events/by-participant/:profileId endpoint
+  const { data: events, error, isLoading } = useSWR<EventType[]>(
+    `/events/by-participant/${profileId}`,
+    fetcher
+  );
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-10">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (error || !events || events.length === 0) {
+    return (
+      <div className="py-10 text-center text-gray-500">
+        <p>This user isn't attending any upcoming events.</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md space-y-4">
-      {mockEvents.map((event) => (
-        <div key={event.id} className="border-b border-gray-200 pb-4 last:border-b-0">
-          <h3 className="font-bold text-indigo-700">{event.name}</h3>
-          <div className="flex items-center text-sm text-gray-500 mt-1 space-x-4">
-            <span className="flex items-center">
-              <Calendar size={14} className="mr-1.5" /> {event.date}
-            </span>
-            <span className="flex items-center">
-              <MapPin size={14} className="mr-1.5" /> {event.location}
-            </span>
-          </div>
-        </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {events.map((event) => (
+        <EventCard key={event._id} event={event} />
       ))}
     </div>
   );

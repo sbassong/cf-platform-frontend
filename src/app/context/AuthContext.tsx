@@ -58,16 +58,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = async () => {
     const isGoogleSession = document.cookie.includes("authjs.session-token");
+    console.log({isGoogleSession})
 
     await fetch(`${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/signout`, {
       method: "POST",
       credentials: "include",
     });
-
-    // If it was a Google session, also sign out from NextAuth.js
-    if (isGoogleSession) {
-      await nextAuthSignOut({ redirect: false });
-    }
+    
+    await nextAuthSignOut({ redirect: false });
 
     setUser(null);
     window.location.href = "/signin";

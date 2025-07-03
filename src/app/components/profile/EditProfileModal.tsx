@@ -2,8 +2,20 @@
 
 import { useState, useEffect, KeyboardEvent, FormEvent } from 'react';
 import { Profile } from '@/types';
-import { X } from 'lucide-react';
-
+import { X, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
 interface EditProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -13,8 +25,8 @@ interface EditProfileModalProps {
 
 export default function EditProfileModal({
   isOpen,
-  onClose,
   profile,
+  onClose,
   onProfileUpdate,
 }: EditProfileModalProps) {
   const [bio, setBio] = useState('');
@@ -29,7 +41,7 @@ export default function EditProfileModal({
       setLocation(profile.location || '');
       setInterests(profile.interests || []);
     }
-  }, [profile]);
+  }, [profile, isOpen]);
 
   if (!isOpen) return null;
 
@@ -73,7 +85,6 @@ export default function EditProfileModal({
       }
 
       const updatedProfile = await res.json();
-      console.log({updatedProfile})
       onProfileUpdate(updatedProfile);
       onClose();
     } catch (error) {
@@ -85,66 +96,71 @@ export default function EditProfileModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-background bg-opacity-20 z-50 flex justify-center items-center">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl text-indigo-600 font-bold">Edit Profile</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-800">
-            <X size={24} />
-          </button>
-        </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="bio" className="block text-sm font-medium text-gray-700">Bio</label>
-            <textarea
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit Profile</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4 py-4">
+          <div className="space-y-2">
+            <Label htmlFor="bio">Bio</Label>
+            <Textarea
               id="bio"
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               rows={3}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-indigo-800"
+              placeholder="Tell us a little about yourself"
             />
           </div>
-          <div>
-            <label htmlFor="location" className="block text-sm font-medium text-gray-700">Location</label>
-            <input
+          <div className="space-y-2">
+            <Label htmlFor="location">Location</Label>
+            <Input
               id="location"
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-indigo-800" 
+              placeholder="City, Country"
             />
           </div>
-          <div>
-            <label htmlFor="interests" className="block text-sm font-medium text-gray-700">Interests</label>
-            <div className="mt-1 flex flex-wrap gap-2 border border-gray-300 rounded-md p-2">
+          <div className="space-y-2">
+            <Label htmlFor="interests">Interests</Label>
+            <div className="flex flex-wrap gap-2 rounded-md border p-2">
               {interests.map((interest) => (
-                <span key={interest} className="flex items-center bg-indigo-100 text-indigo-700 text-sm font-medium px-2 py-1 rounded-full">
+                <Badge key={interest} variant="secondary">
                   {interest}
-                  <button type="button" onClick={() => removeInterest(interest)} className="ml-2 text-indigo-500 hover:text-indigo-700">
-                    <X size={14} />
+                  <button
+                    type="button"
+                    onClick={() => removeInterest(interest)}
+                    className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                  >
+                    <X className="h-3 w-3" />
                   </button>
-                </span>
+                </Badge>
               ))}
-              <input
+              <Input
+                id="interests"
                 type="text"
                 value={currentInterest}
                 onChange={(e) => setCurrentInterest(e.target.value)}
                 onKeyDown={handleInterestKeyDown}
-                placeholder="Type and press Enter"
-                className="flex-grow outline-none text-indigo-800"
+                placeholder="Add an interest..."
+                className="flex-grow h-auto p-0 bg-transparent border-none shadow-none focus-visible:ring-0"
               />
             </div>
           </div>
-          <div className="flex justify-end space-x-2">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
-              Cancel
-            </button>
-            <button type="submit" disabled={isSaving} className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:bg-indigo-400">
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button type="button" variant="outline">
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button type="submit" disabled={isSaving}>
+              {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isSaving ? 'Saving...' : 'Save Changes'}
-            </button>
-          </div>
+            </Button>
+          </DialogFooter>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

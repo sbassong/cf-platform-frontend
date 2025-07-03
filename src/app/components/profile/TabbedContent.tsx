@@ -1,43 +1,37 @@
-'use client';
+"use client";
 
-import { useState, ReactNode } from 'react';
-
-interface Tab {
-  label: string;
-  content: ReactNode;
-}
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import PostsList from "./PostsLists";
+import GroupsList from "./GroupsList";
+import EventsList from "./EventsList";
+import { Profile } from "@/types";
 
 interface TabbedContentProps {
-  tabs: Tab[];
+  profile: Profile;
 }
 
-export default function TabbedContent({ tabs }: TabbedContentProps) {
-  const [activeTab, setActiveTab] = useState(0);
-
+export default function TabbedContent({ profile }: TabbedContentProps) {
   return (
-    <div>
-      {/* Tab Buttons */}
-      <div className="border-b border-gray-200 mb-4">
-        <nav className="-mb-px flex space-x-6" aria-label="Tabs">
-          {tabs.map((tab, index) => (
-            <button
-              key={tab.label}
-              onClick={() => setActiveTab(index)}
-              className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors
-                ${activeTab === index
-                  ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }
-              `}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </nav>
-      </div>
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+      <Tabs defaultValue="posts" className="w-full">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="posts" data-cy="posts-tab">Posts</TabsTrigger>
+          <TabsTrigger value="groups" data-cy="groups-tab">Groups</TabsTrigger>
+          <TabsTrigger value="events" data-cy="events-tab">Events</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="posts">
+          <PostsList profileId={profile?._id} />
+        </TabsContent>
 
-      {/* Active Tab Content */}
-      <div>{tabs[activeTab].content}</div>
+        <TabsContent value="groups">
+          <GroupsList profileId={profile?._id} />
+        </TabsContent>
+
+        <TabsContent value="events">
+          <EventsList profileId={profile?._id} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
