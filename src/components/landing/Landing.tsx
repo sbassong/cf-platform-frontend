@@ -4,7 +4,7 @@ import Testimonials from "./landing/Testimonials";
 import CTA from "./landing/CTA";
 import Footer from "./landing/Footer";
 
-export function LandingPage() {
+export default function Landing() {
   return (
     <>
       <main>

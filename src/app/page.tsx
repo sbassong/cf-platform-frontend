@@ -1,7 +1,7 @@
 import { auth } from "../../auth";
 import { cookies } from "next/headers";
-import { LandingPage } from "./components/LandingPage";
-import Feed from "./components/Feed";
+import Landing from "../components/landing/Landing";
+import Feed from "../components/landing/Feed";
 
 export default async function HomePage() {
   const nextAuthSession = await auth();
@@ -11,9 +11,8 @@ export default async function HomePage() {
 
   // The user is considered logged in if EITHER session exists.
   if (!nextAuthSession && !backendToken) {
-    return <LandingPage />;
+    return <Landing />;
   }
 
-  // If either session exists, show the feed
   return <Feed />;
 }

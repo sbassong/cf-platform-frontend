@@ -8,6 +8,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Childfree app",
   description: "Platform for the childfree community",
+  icons: "",
 };
 
 export default function RootLayout({
