@@ -87,7 +87,7 @@ export default function AboutPage() {
           {/* Founder 1 */}
           <div className="flex flex-col items-center">
             <Avatar className="h-24 w-24 mb-4">
-              <AvatarImage src="/placeholder-user.jpg" alt="Co-founder 1" />
+              <AvatarImage src="/lady-cat.jpg" alt="Co-founder 1" />
               <AvatarFallback>JD</AvatarFallback>
             </Avatar>
             <h3 className="text-xl font-semibold">Jane Doe</h3>
@@ -100,7 +100,7 @@ export default function AboutPage() {
           {/* Founder 2 */}
           <div className="flex flex-col items-center">
             <Avatar className="h-24 w-24 mb-4">
-              <AvatarImage src="/placeholder-user.jpg" alt="Co-founder 2" />
+              <AvatarImage src="/lady-cat.jpg" alt="Co-founder 2" />
               <AvatarFallback>JS</AvatarFallback>
             </Avatar>
             <h3 className="text-xl font-semibold">John Smith</h3>
@@ -113,7 +113,7 @@ export default function AboutPage() {
           {/* Founder 3 */}
           <div className="flex flex-col items-center">
             <Avatar className="h-24 w-24 mb-4">
-              <AvatarImage src="/placeholder-user.jpg" alt="Co-founder 3" />
+              <AvatarImage src="/lady-cat.jpg" alt="Co-founder 3" />
               <AvatarFallback>ES</AvatarFallback>
             </Avatar>
             <h3 className="text-xl font-semibold">Emily Stone</h3>

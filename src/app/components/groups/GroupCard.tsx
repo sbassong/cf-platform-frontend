@@ -11,7 +11,7 @@ interface GroupCardProps {
 export function GroupCard({ group }: GroupCardProps) {
   return (
     <Link href={`/groups/${group._id}`}>
-      {/* <Card className="hover:bg-muted/50 transition-colors">
+      <Card className="hover:bg-muted/50 transition-colors">
         <CardHeader className="flex-row items-center gap-4">
           <Avatar>
             <AvatarImage src={group.avatarUrl} alt={group.name} />
@@ -31,7 +31,7 @@ export function GroupCard({ group }: GroupCardProps) {
             {group.memberCount} members
           </div>
         </CardContent>
-      </Card> */}
+      </Card>
     </Link>
   );
 }

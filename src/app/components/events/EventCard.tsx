@@ -10,9 +10,11 @@ interface EventCardProps {
 }
 
 export function EventCard({ event }: EventCardProps) {
+
+
   return (
     <Link href={`/events/${event._id}`}>
-      {/* <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+      <Card className="overflow-hidden hover:shadow-lg transition-shadow">
         <div className="relative h-40 w-full bg-muted">
           <Image
             src={event.imageUrl || ""}
@@ -37,7 +39,7 @@ export function EventCard({ event }: EventCardProps) {
         <CardFooter>
           <p className="text-xs text-muted-foreground">{event.attendeeCount} people attending</p>
         </CardFooter>
-      </Card> */}
+      </Card>
     </Link>
   );
 }

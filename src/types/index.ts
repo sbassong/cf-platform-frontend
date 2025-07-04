@@ -47,3 +47,38 @@ export interface Post {
   createdAt: string;
   updatedAt: string;
 }
+
+/**
+ * Represents a user-created group.
+ * This aligns with the Group schema in the NestJS backend.
+ */
+export interface Group {
+  _id: string;
+  name: string;
+  description: string;
+  owner: Profile;
+  members: Profile[];
+  memberCount: number;
+  avatarUrl?: string;
+  bannerUrl?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * Represents a user-created event.
+ * This aligns with the Event schema in the NestJS backend.
+ */
+export interface Event {
+  _id: string;
+  title: string;
+  description: string;
+  organizer: Profile;
+  attendees: Profile[];
+  attendeeCount: number;
+  date: string;
+  location: string;
+  imageUrl?: string;
+  createdAt: string;
+  updatedAt: string;
+}
