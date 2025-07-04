@@ -1,13 +1,16 @@
 import Image from "next/image";
 import { Profile } from "@/types";
-import { UserPlus, MessageCircle, Edit, Camera } from "lucide-react";
+import { useRouter } from "next/router";
+import { UserPlus, MessageCircle, Edit, Camera, UserCheck } from "lucide-react";
+import { useAuth } from "@/app/context/AuthContext";
+import { useSWRConfig } from "swr";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { followProfile, unfollowProfile } from "@/lib/api";
 import SignOutButton from "../SignOutButton";
 
 interface ProfileHeaderProps {
   profile: Profile;
-  isOwner: boolean;
   onEditClick: () => void;
   onAvatarEditClick: () => void;
   onBannerEditClick: () => void;
@@ -15,15 +18,40 @@ interface ProfileHeaderProps {
 
 export default function ProfileHeader({
   profile,
-  isOwner,
   onEditClick,
   onAvatarEditClick,
   onBannerEditClick,
 }: ProfileHeaderProps) {
+  const { user: authenticatedUser } = useAuth();
+  const router = useRouter();
+  const { mutate } = useSWRConfig();
+
+  const isOwner = authenticatedUser?.profile?._id === profile._id;
+  // Determine if the authenticated user is following the viewed profile
+  const isFollowing = authenticatedUser?.profile?.following?.includes(
+    profile._id
+  );
+
+  const handleFollowToggle = async () => {
+    if (!authenticatedUser) return router.push("/signin");
+
+    try {
+      if (isFollowing) {
+        await unfollowProfile(profile._id);
+      } else {
+        await followProfile(profile._id);
+      }
+      // Revalidate both the viewed profile and the authenticated user's profile
+      mutate(`/profiles/${profile.username}`);
+      mutate(`/api/auth/session`);
+    } catch (error) {
+      console.error("Failed to follow/unfollow user:", error);
+    }
+  };
 
   // Helper for avatar fallback
   const getInitials = (name: string) => {
-    const names = name.split(' ');
+    const names = name.split(" ");
     return names.length > 1
       ? `${names[0][0]}${names[names.length - 1][0]}`.toUpperCase()
       : name.substring(0, 2).toUpperCase();
@@ -45,7 +73,6 @@ export default function ProfileHeader({
         />
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-
 
         {isOwner && (
           <Button
@@ -69,8 +96,13 @@ export default function ProfileHeader({
                 className="h-full w-full"
                 onClick={isOwner ? onAvatarEditClick : undefined}
               >
-                <AvatarImage src={profile.avatarUrl} alt={profile.displayName} />
-                <AvatarFallback>{getInitials(profile.displayName)}</AvatarFallback>
+                <AvatarImage
+                  src={profile.avatarUrl}
+                  alt={profile.displayName}
+                />
+                <AvatarFallback>
+                  {getInitials(profile.displayName)}
+                </AvatarFallback>
               </Avatar>
               {isOwner && (
                 <button
@@ -83,7 +115,7 @@ export default function ProfileHeader({
             </div>
           </div>
 
-          {/* Details and Actions Section - structure unchanged */}
+          {/* Details and Actions Section */}
           <div className="flex justify-between items-start flex-wrap">
             <div className="mt-2 mr-5">
               <h1 className="text-3xl font-extrabold text-gray-900">
@@ -92,27 +124,33 @@ export default function ProfileHeader({
               <p className="text-sm text-gray-500">@{profile.username}</p>
               <div className="flex space-x-4 text-sm text-gray-500 mt-2">
                 <span>
-                  <span className="font-bold text-gray-900">148</span> Followers
+                  <span className="font-bold text-gray-900">
+                    {profile.followersCount}
+                  </span>{" "}
+                  Followers
                 </span>
                 <span>
-                  <span className="font-bold text-gray-900">92</span> Following
+                  <span className="font-bold text-gray-900">
+                    {profile.followingCount}
+                  </span>{" "}
+                  Following
                 </span>
               </div>
             </div>
 
-            {/* Action Buttons - structure unchanged */}
+            {/* Action Buttons */}
             <div className="flex space-x-2 pt-4">
               {isOwner ? (
                 <>
-                <Button
-                  variant="outline"
-                  onClick={onEditClick}
-                  className="flex items-center space-x-2"
-                >
-                  <Edit size={16} />
-                  <span>Edit Profile</span>
-                </Button>
-                <SignOutButton />
+                  <Button
+                    variant="outline"
+                    onClick={onEditClick}
+                    className="flex items-center space-x-2"
+                  >
+                    <Edit size={16} />
+                    <span>Edit Profile</span>
+                  </Button>
+                  <SignOutButton />
                 </>
               ) : (
                 <>
@@ -121,11 +159,15 @@ export default function ProfileHeader({
                     <span>Message</span>
                   </Button>
                   <Button
-                    variant="secondary"
-                    className="flex items-center space-x-2"
+                    variant={isFollowing ? "secondary" : "default"}
+                    onClick={handleFollowToggle}
                   >
-                    <UserPlus size={16} />
-                    <span>Follow</span>
+                    {isFollowing ? (
+                      <UserCheck size={16} className="mr-2" />
+                    ) : (
+                      <UserPlus size={16} className="mr-2" />
+                    )}
+                    {isFollowing ? "Following" : "Follow"}
                   </Button>
                 </>
               )}

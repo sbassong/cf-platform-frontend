@@ -12,6 +12,10 @@ export interface Profile {
   location?: string;
   interests?: string[];
   userId: string; // Ref back to the User document
+  followers?: string[];
+  following?: string[];
+  followingCount: number;
+  followersCount: number;
   createdAt: string;
   updatedAt: string;
 }
