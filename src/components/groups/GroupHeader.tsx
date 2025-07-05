@@ -1,7 +1,7 @@
 'use client';
 
 import { useSWRConfig } from 'swr';
-import { useAuth } from '@/app/context/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 import { joinGroup, leaveGroup } from '@/lib/api';
 import { Group } from '@/types';
 

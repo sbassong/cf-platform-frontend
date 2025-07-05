@@ -1,8 +1,8 @@
-import Hero from "./landing/Hero";
-import Features from "./landing/Features";
-import Testimonials from "./landing/Testimonials";
-import CTA from "./landing/CTA";
-import Footer from "./landing/Footer";
+import Hero from "./Hero";
+import Features from "./Features";
+import Testimonials from "./Testimonials";
+import CTA from "./CTA";
+import Footer from "./Footer";
 
 export default function Landing() {
   return (

@@ -6,9 +6,9 @@ import useSWR from 'swr';
 import { fetcher } from '@/lib/api';
 import { Group } from '@/types';
 import { Loader2 } from 'lucide-react';
-import GroupHeader from '@/app/components/groups/GroupHeader';
-import GroupTabs from '@/app/components/groups/GroupTabs';
-import EditGroupModal from '@/app/components/groups/EditGroupModal'; 
+import GroupHeader from '@/components/groups/GroupHeader';
+import GroupTabs from '@/components/groups/GroupTabs';
+import EditGroupModal from '@/components/groups/EditGroupModal';
 
 export default function GroupDetailPage() {
   const params = useParams();

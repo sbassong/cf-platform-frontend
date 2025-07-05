@@ -1,7 +1,7 @@
 'use client';
 
 import { useSWRConfig } from 'swr';
-import { useAuth } from '@/app/context/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 import { rsvpToEvent, unRsvpFromEvent } from '@/lib/api';
 import { Event as EventType } from '@/types';
 import { format } from 'date-fns';
@@ -9,8 +9,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Calendar, MapPin, Users, LogIn, LogOut } from 'lucide-react';
+// import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { MapPin, Users, LogIn, LogOut } from 'lucide-react';
 
 interface EventHeaderProps {
   event: EventType;

@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useSWRConfig } from 'swr';
-import { useAuth } from '@/app/context/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 import { createPost, getPostImageUploadUrl } from '@/lib/api';
 
 import { Button } from '@/components/ui/button';
@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogClose,
+  // DialogClose,
 } from '@/components/ui/dialog';
 import {
   Form,

@@ -6,8 +6,9 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/api";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import PostCard from "./posts/PostCard";
-import CreatePostModal from "./posts/CreatePostModal";
+import PostCard from "../posts/PostCard";
+import CreatePostModal from "../posts/CreatePostModal";
+
 
 export default function Feed() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -51,7 +52,7 @@ export default function Feed() {
             <div>
               <h1 className="text-2xl font-bold tracking-tight">Home Feed</h1>
               <p className="text-muted-foreground">
-                See what's new in your community.
+                {"See what's new in your community."}
               </p>
             </div>
             <Button onClick={() => setIsModalOpen(true)}>Create Post</Button>

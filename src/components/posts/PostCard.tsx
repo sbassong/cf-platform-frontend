@@ -11,8 +11,9 @@ import { Post as PostType } from "@/types";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { deletePost } from "@/lib/api";
-import { useAuth } from "@/app/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { useSWRConfig } from "swr";
+import { getInitials } from "@/lib/utils";
 import EditPostModal from "./EditPostModal";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -45,7 +46,7 @@ import {
 export default function PostCard({ post }: { post: PostType }) {
   const { user } = useAuth();
   const { mutate } = useSWRConfig();
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  // const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const isOwner = user?.profile?._id === post.author._id;
@@ -58,14 +59,6 @@ export default function PostCard({ post }: { post: PostType }) {
     } catch (error) {
       console.error("Failed to delete post", error);
     }
-  };
-
-  const getInitials = (name: string) => {
-    const names = name.split(" ");
-    if (names.length > 1) {
-      return `${names[0][0]}${names[names.length - 1][0]}`.toUpperCase();
-    }
-    return name.substring(0, 2).toUpperCase();
   };
 
   return (

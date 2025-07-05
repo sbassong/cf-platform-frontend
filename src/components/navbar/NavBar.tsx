@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -22,18 +22,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { cn } from "@/lib/utils";
+import { cn, getInitials } from "@/lib/utils";
 import React from "react";
-import { Users, Calendar, Compass } from "lucide-react";
+// import { Users, Calendar, Compass } from "lucide-react";
 
-const navLinks = [
-  { href: "/", label: "Home" },
-  // { href: "/feed", label: "Feed" },
-  // { href: "/groups", label: "Groups" },
-  // { href: "/events", label: "Events" },
-  // { href: "/messages", label: "Messages" },
-  { href: "/about", label: "About" },
-];
+// const navLinks = [
+//   { href: "/", label: "Home" },
+//   // { href: "/feed", label: "Feed" },
+//   // { href: "/groups", label: "Groups" },
+//   // { href: "/events", label: "Events" },
+//   // { href: "/messages", label: "Messages" },
+//   { href: "/about", label: "About" },
+// ];
 
 // This is a helper component for styling dropdown items, based on shadcn docs
 const ListItem = React.forwardRef<
@@ -65,15 +65,6 @@ ListItem.displayName = "ListItem";
 export default function Navbar() {
   const pathname = usePathname();
   const { user, signOut } = useAuth();
-
-  // helper to get initials from the display name for the avatar fallback
-  const getInitials = (name: string) => {
-    const names = name.split(" ");
-    if (names.length > 1) {
-      return `${names[0][0]}${names[names.length - 1][0]}`.toUpperCase();
-    }
-    return name.substring(0, 2).toUpperCase();
-  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 px-4 lg:px-8 h-16 flex items-center bg-background/95 backdrop-blur-sm border-b">

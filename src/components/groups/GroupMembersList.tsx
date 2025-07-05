@@ -2,6 +2,7 @@
 
 import { Profile } from "@/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getInitials } from "@/lib/utils";
 import Link from "next/link";
 
 interface GroupMembersListProps {
@@ -10,10 +11,6 @@ interface GroupMembersListProps {
 }
 
 export default function GroupMembersList({ members, owner }: GroupMembersListProps) {
-  const getInitials = (name: string) => {
-    const names = name.split(' ');
-    return names.length > 1 ? `${names[0][0]}${names[names.length - 1][0]}` : name.substring(0, 2);
-  };
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">

@@ -6,9 +6,9 @@ import useSWR from 'swr';
 import { fetcher } from '@/lib/api';
 import { Event as EventType } from '@/types';
 import { Loader2 } from 'lucide-react';
-import EventHeader from '@/app/components/events/EventHeader';
-import EventTabs from '@/app/components/events/EventTabs'; 
-import EditEventModal from '@/app/components/events/EditEventModal';
+import EventHeader from '@/components/events/EventHeader';
+import EventTabs from '@/components/events/EventTabs';
+import EditEventModal from '@/components/events/EditEventModal';
 
 export default function EventDetailPage() {
   const params = useParams();

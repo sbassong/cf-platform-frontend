@@ -11,7 +11,6 @@ interface EventCardProps {
 
 export function EventCard({ event }: EventCardProps) {
 
-
   return (
     <Link href={`/events/${event._id}`}>
       <Card className="overflow-hidden hover:shadow-lg transition-shadow">

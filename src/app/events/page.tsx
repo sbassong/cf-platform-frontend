@@ -4,7 +4,7 @@ import useSWR from 'swr';
 import { fetcher } from '@/lib/api';
 import { Event as EventType } from '@/types';
 import { Loader2 } from 'lucide-react';
-import { EventCard } from '@/app/components/events/EventCard';
+import { EventCard } from '@/components/events/EventCard';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 

@@ -4,7 +4,7 @@ import useSWR from 'swr';
 import { fetcher } from '@/lib/api';
 import { Post } from '@/types';
 import { Loader2 } from 'lucide-react';
-import PostCard from '@/app/components/posts/PostCard';
+import PostCard from '@/components/posts/PostCard';
 
 interface GroupPostFeedProps {
   groupId: string;

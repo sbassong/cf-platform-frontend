@@ -2,6 +2,7 @@
 
 import { Profile } from "@/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getInitials } from "@/lib/utils";
 import Link from "next/link";
 
 interface AttendeeListProps {
@@ -10,11 +11,6 @@ interface AttendeeListProps {
 }
 
 export default function AttendeeList({ attendees, organizer }: AttendeeListProps) {
-  const getInitials = (name: string) => {
-    const names = name.split(' ');
-    return names.length > 1 ? `${names[0][0]}${names[names.length - 1][0]}` : name.substring(0, 2);
-  };
-
   // Combine organizer and other attendees, ensuring no duplicates
   const allAttendees = [organizer, ...attendees.filter(a => a._id !== organizer._id)];
 

@@ -2,12 +2,13 @@ import Image from "next/image";
 import { Profile } from "@/types";
 import { useRouter } from "next/router";
 import { UserPlus, MessageCircle, Edit, Camera, UserCheck } from "lucide-react";
-import { useAuth } from "@/app/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { useSWRConfig } from "swr";
+import { getInitials } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { followProfile, unfollowProfile } from "@/lib/api";
-import SignOutButton from "../SignOutButton";
+import SignOutButton from "./SignOutButton";
 
 interface ProfileHeaderProps {
   profile: Profile;
@@ -47,14 +48,6 @@ export default function ProfileHeader({
     } catch (error) {
       console.error("Failed to follow/unfollow user:", error);
     }
-  };
-
-  // Helper for avatar fallback
-  const getInitials = (name: string) => {
-    const names = name.split(" ");
-    return names.length > 1
-      ? `${names[0][0]}${names[names.length - 1][0]}`.toUpperCase()
-      : name.substring(0, 2).toUpperCase();
   };
 
   return (

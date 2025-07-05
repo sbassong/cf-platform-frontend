@@ -3,12 +3,12 @@
 import { useState, useEffect } from "react";
 import { notFound, useParams } from "next/navigation";
 import { Profile } from "@/types";
-import { useAuth } from "@/app/context/AuthContext";
-import ProfileHeader from "@/app/components/profile/ProfileHeader";
-import EditProfileModal from "@/app/components/profile/EditProfileModal";
-import TabbedContent from "@/app/components/profile/TabbedContent";
-import AvatarUploadModal from "@/app/components/profile/AvatarUploadModal";
-import BannerUploadModal from "@/app/components/profile/BannerUploadModal";
+import { useAuth } from "@/context/AuthContext";
+import ProfileHeader from "@/components/profile/ProfileHeader";
+import EditProfileModal from "@/components/profile/EditProfileModal";
+import TabbedContent from "@/components/profile/TabbedContent";
+import AvatarUploadModal from "@/components/profile/AvatarUploadModal";
+import BannerUploadModal from "@/components/profile/BannerUploadModal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";

@@ -4,14 +4,14 @@ import useSWR from 'swr';
 import { fetcher } from '@/lib/api';
 import { Group } from '@/types';
 import { Loader2 } from 'lucide-react';
-import { GroupCard } from '@/app/components/groups/GroupCard';
+import { GroupCard } from '@/components/groups/GroupCard';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 export default function GroupsPage() {
   const { data: groups, error, isLoading } = useSWR<Group[]>('/groups', fetcher);
 
-  console.log({groups})
+  console.log({ groups })
 
   return (
     <div className="container max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
