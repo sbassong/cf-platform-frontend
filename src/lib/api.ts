@@ -118,10 +118,8 @@ export const unfollowProfile = async (profileId: string): Promise<Profile> => {
 };
   // messaging-related
 export const searchProfiles = async (query: string): Promise<Profile[]> => {
-  console.log({query})
   if (!query) return [];
   const response = await api.get(`/profiles/search?q=${query}`);
-  console.log({searRes: response})
   return response.data;
 };
 

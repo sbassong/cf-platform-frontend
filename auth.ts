@@ -43,7 +43,6 @@ export const config = {
               providerId: user.id, // 'sub' from the JWT is typically the user.id
             }
           );
-          console.log({oauthRes})
           return oauthRes
           return true;
         } catch (err: any) {

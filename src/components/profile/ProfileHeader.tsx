@@ -77,8 +77,6 @@ export default function ProfileHeader({
       mutate(`/profiles/${profile.username}`);
       mutate('/auth/session');
     }
-
-    console.log({profile})
   };
 
   return (

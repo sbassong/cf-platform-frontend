@@ -11,8 +11,6 @@ import Link from 'next/link';
 export default function GroupsPage() {
   const { data: groups, error, isLoading } = useSWR<Group[]>('/groups', fetcher);
 
-  console.log({ groups })
-
   return (
     <div className="container max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       {/* Page Header */}
