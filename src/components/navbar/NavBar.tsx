@@ -67,7 +67,7 @@ export default function Navbar() {
   const { user, signOut } = useAuth();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-4 lg:px-8 h-16 flex items-center bg-background/95 backdrop-blur-sm border-b">
+    <header className="fixed top-0 left-0 right-0 z-50 px-4 lg:px-6 h-16 flex items-center bg-background/95 backdrop-blur-sm border-b">
       <div className="container flex items-center">
         <Link href="/" className="flex items-center justify-center mr-6">
           <span className="sr-only">Child-Free Platform</span>
@@ -100,7 +100,8 @@ export default function Navbar() {
                     className={cn(
                       "bg-transparent text-foreground/60 hover:text-foreground/80",
                       (pathname.startsWith("/groups") ||
-                        pathname.startsWith("/events")) &&
+                        pathname.startsWith("/events")) ||
+                        pathname.startsWith("/messages") &&
                         "text-foreground font-semibold"
                     )}
                   >
@@ -113,6 +114,9 @@ export default function Navbar() {
                       </ListItem>
                       <ListItem href="/events" title="Events">
                         Discover virtual or local meetups and activities.
+                      </ListItem>
+                      <ListItem href="/messages" title="Messages">
+                        Make connections and catch up with your friends.
                       </ListItem>
                     </ul>
                   </NavigationMenuContent>

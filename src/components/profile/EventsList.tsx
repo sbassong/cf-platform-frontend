@@ -11,7 +11,6 @@ interface EventsListProps {
 }
 
 export default function EventsList({ profileId }: EventsListProps) {
-  // will have a /events/by-participant/:profileId endpoint
   const { data: events, error, isLoading } = useSWR<EventType[]>(
     `/events/by-participant/${profileId}`,
     fetcher
@@ -28,7 +27,7 @@ export default function EventsList({ profileId }: EventsListProps) {
   if (error || !events || events.length === 0) {
     return (
       <div className="py-10 text-center text-gray-500">
-        <p>This user isn't attending any upcoming events.</p>
+        <p>{"This user isn't attending any upcoming events."}</p>
       </div>
     );
   }

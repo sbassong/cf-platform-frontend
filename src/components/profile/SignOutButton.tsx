@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 
 export default function SignOutButton() {
@@ -10,7 +10,7 @@ export default function SignOutButton() {
     <Button
       onClick={signOut}
       variant="destructive"
-      size="sm"
+      size="default"
       data-cy="signout-button"
     >
       Sign Out

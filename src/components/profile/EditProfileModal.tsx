@@ -1,9 +1,10 @@
-'use client';
+"use client";
 
-import { useState, useEffect, KeyboardEvent, FormEvent } from 'react';
-import { Profile } from '@/types';
-import { X, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useState, useEffect, KeyboardEvent, FormEvent } from "react";
+import { useSWRConfig } from "swr";
+import { Profile } from "@/types";
+import { X, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,34 +12,34 @@ import {
   DialogTitle,
   DialogFooter,
   DialogClose,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 interface EditProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
   profile: Profile;
-  onProfileUpdate: (updatedProfile: Profile) => void;
 }
 
 export default function EditProfileModal({
   isOpen,
   profile,
   onClose,
-  onProfileUpdate,
 }: EditProfileModalProps) {
-  const [bio, setBio] = useState('');
-  const [location, setLocation] = useState('');
+  const { mutate } = useSWRConfig();
+
+  const [bio, setBio] = useState("");
+  const [location, setLocation] = useState("");
   const [interests, setInterests] = useState<string[]>([]);
-  const [currentInterest, setCurrentInterest] = useState('');
+  const [currentInterest, setCurrentInterest] = useState("");
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (profile) {
-      setBio(profile.bio || '');
-      setLocation(profile.location || '');
+      setBio(profile.bio || "");
+      setLocation(profile.location || "");
       setInterests(profile.interests || []);
     }
   }, [profile, isOpen]);
@@ -46,12 +47,12 @@ export default function EditProfileModal({
   if (!isOpen) return null;
 
   const handleInterestKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && currentInterest) {
+    if (e.key === "Enter" && currentInterest) {
       e.preventDefault();
       if (!interests.includes(currentInterest.trim())) {
         setInterests([...interests, currentInterest.trim()]);
       }
-      setCurrentInterest('');
+      setCurrentInterest("");
     }
   };
 
@@ -73,23 +74,21 @@ export default function EditProfileModal({
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/profiles/${profile._id}`,
         {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
           body: JSON.stringify(updatedData),
-        },
+        }
       );
 
       if (!res.ok) {
-        throw new Error('Failed to update profile');
+        throw new Error("Failed to update profile");
       }
 
-      const updatedProfile = await res.json();
-      onProfileUpdate(updatedProfile);
+      mutate(`/profiles/${profile.username}`);
       onClose();
     } catch (error) {
       console.error(error);
-      // Handle error display to the user
     } finally {
       setIsSaving(false);
     }
@@ -156,7 +155,7 @@ export default function EditProfileModal({
             </DialogClose>
             <Button type="submit" disabled={isSaving}>
               {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isSaving ? 'Saving...' : 'Save Changes'}
+              {isSaving ? "Saving..." : "Save Changes"}
             </Button>
           </DialogFooter>
         </form>

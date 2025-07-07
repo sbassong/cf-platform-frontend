@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,8 +16,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { GoogleIcon } from "@/components/icons/GoogleIcon";
-
 
 
 export default function SigninPage() {
@@ -61,7 +60,7 @@ export default function SigninPage() {
     }
   };
 
-  return(
+  return (
     <div className="flex items-center justify-center min-h-screen">
       <Card className="w-full max-w-sm" data-cy="signin-card">
         <CardHeader>
@@ -74,12 +73,19 @@ export default function SigninPage() {
           {/* Google Sign-In */}
           <Button
             variant="outline"
-            className="w-full flex items-center gap-2 border-red-500 text-red-500 hover:bg-red-500/10 hover:text-red-600"
+            className="w-full flex items-center gap-2 border-primary border-2 h-12 hover:bg-primary/20"
 
             onClick={handleGoogleLogin}
             data-cy="google-signin-button"
           >
-            <GoogleIcon />
+            <div className="relative h-5 w-5 group">
+              <Image
+                src="google-icon.svg"
+                alt="Google's G icon"
+                fill
+                priority
+              />
+            </div>
             Sign In with Google
           </Button>
 

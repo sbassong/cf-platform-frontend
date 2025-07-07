@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import useSWR from 'swr';
+import { fetcher } from "@/lib/api";
 import { notFound, useParams } from "next/navigation";
 import { Profile } from "@/types";
 import { useAuth } from "@/context/AuthContext";
@@ -12,52 +14,37 @@ import BannerUploadModal from "@/components/profile/BannerUploadModal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, MapPin, User, Edit } from "lucide-react";
+import { Calendar, MapPin, User, Edit, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 
-async function getProfileData(username: string): Promise<Profile | null> {
-  try {
-    const profileRes = await fetch(
-      `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/profiles/${username}`,
-      { cache: "no-store" }
-    );
-    if (!profileRes.ok) return null;
-    return await profileRes.json();
-  } catch (error) {
-    console.error("Failed to fetch profile data:", error);
-    return null;
-  }
-}
 
 export default function ProfilePage() {
   const params = useParams();
   const { username } = params;
   const { user: authenticatedUser } = useAuth();
-  const [profile, setProfile] = useState<Profile | null>(null);
+
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
   const [isBannerModalOpen, setIsBannerModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (username) {
-      const fetchData = async () => {
-        setIsLoading(true);
-        const data = await getProfileData(username);
-        if (data) {
-          setProfile(data);
-        } else {
-          notFound();
-        }
-        setIsLoading(false);
-      };
-      fetchData();
-    }
-  }, [username]);
+  const {
+    data: profile,
+    error,
+    isLoading,
+  } = useSWR<Profile>(username ? `/profiles/${username}` : null, fetcher);
 
-  const handleProfileUpdate = (updatedProfile: Profile) => {
-    setProfile(updatedProfile);
-  };
+  // Handle not found error from SWR
+  if (error) {
+    notFound();
+  }
+
+  if (isLoading || !profile) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Loader2 className="h-10 w-10 animate-spin" />
+      </div>
+    );
+  }
 
   if (isLoading || !profile) {
     return <div>Loading profile...</div>; // May add a proper skeleton loader
@@ -69,7 +56,6 @@ export default function ProfilePage() {
     <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <ProfileHeader
         profile={profile}
-        isOwner={isOwner}
         onEditClick={() => setIsEditModalOpen(true)}
         onAvatarEditClick={() => setIsAvatarModalOpen(true)}
         onBannerEditClick={() => setIsBannerModalOpen(true)}
@@ -154,19 +140,19 @@ export default function ProfilePage() {
             isOpen={isEditModalOpen}
             onClose={() => setIsEditModalOpen(false)}
             profile={profile}
-            onProfileUpdate={handleProfileUpdate}
+            // onProfileUpdate={handleProfileUpdate}
           />
           <AvatarUploadModal
             isOpen={isAvatarModalOpen}
             onClose={() => setIsAvatarModalOpen(false)}
             profile={profile}
-            onProfileUpdate={handleProfileUpdate}
+            // onProfileUpdate={handleProfileUpdate}
           />
           <BannerUploadModal
             isOpen={isBannerModalOpen}
             onClose={() => setIsBannerModalOpen(false)}
             profile={profile}
-            onProfileUpdate={handleProfileUpdate}
+            // onProfileUpdate={handleProfileUpdate}
           />
         </>
       )}

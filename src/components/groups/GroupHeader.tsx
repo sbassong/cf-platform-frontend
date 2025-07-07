@@ -19,8 +19,6 @@ export default function GroupHeader({ group, onEdit }: GroupHeaderProps) {
   const { user } = useAuth();
   const { mutate } = useSWRConfig();
 
-  console.log({ group })
-
   // Determine user's status within the group
   const isOwner = user?.profile?._id === group.owner._id;
   const isMember = group.members.some(

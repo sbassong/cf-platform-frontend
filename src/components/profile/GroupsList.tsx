@@ -11,7 +11,6 @@ interface GroupsListProps {
 }
 
 export default function GroupsList({ profileId }: GroupsListProps) {
-  // expect a /groups/by-author/:profileId endpoint
   const { data: groups, error, isLoading } = useSWR<Group[]>(
     `/groups/by-author/${profileId}`,
     fetcher
@@ -28,7 +27,7 @@ export default function GroupsList({ profileId }: GroupsListProps) {
   if (error || !groups || groups.length === 0) {
     return (
       <div className="py-10 text-center text-gray-500">
-        <p>This user hasn't joined or created any groups yet.</p>
+        <p>{"This user hasn't joined or created any groups yet."}</p>
       </div>
     );
   }

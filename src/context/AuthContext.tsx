@@ -1,15 +1,10 @@
 "use client";
 
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useRef,
-  ReactNode,
-} from "react";
+import React, { createContext, useContext, ReactNode } from "react";
+import useSWR, { useSWRConfig } from "swr";
 import { signOut as nextAuthSignOut } from "next-auth/react";
 import type { User } from "@/types";
+import { fetcher } from "@/lib/api";
 
 interface AuthContextType {
   user: User | null;
@@ -19,59 +14,34 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const hasFetched = useRef(false);
-
-
-  useEffect(() => {
-    // ref-based guard to prevent the effect from
-    // running more than once in React's Strict Mode (in development).
-    if (hasFetched.current) {
-      return;
+  const { data: user, error, isLoading } = useSWR<User | null>(
+    "/auth/session",
+    fetcher,
+    {
+      shouldRetryOnError: false,
+      revalidateOnFocus: false,
     }
-    hasFetched.current = true;
+  );
 
-    const checkBackendSession = async () => {
-      try {
-        const res = await fetch("/api/auth/session", {
-          credentials: "include",
-        });
-        if (res.ok) {
-          const userData: User = await res.json();
-          setUser(userData);
-        } else {
-          setUser(null);
-        }
-      } catch (error) {
-        console.error("No active backend session found.");
-        setUser(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkBackendSession();
-  }, []);
+  const { mutate } = useSWRConfig();
 
   const signOut = async () => {
-    const isGoogleSession = document.cookie.includes("authjs.session-token");
-    console.log({isGoogleSession})
-
     await fetch(`${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/signout`, {
       method: "POST",
       credentials: "include",
     });
-    
     await nextAuthSignOut({ redirect: false });
 
-    setUser(null);
+    mutate("/auth/session", null, false);
     window.location.href = "/signin";
   };
 
-  const value = { user, isLoading, signOut };
+  const value = {
+    user: user || null,
+    isLoading,
+    signOut,
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

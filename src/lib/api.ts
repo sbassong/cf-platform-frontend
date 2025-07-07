@@ -73,6 +73,7 @@ export const getGroupBannerUploadUrl = async (contentType: string): Promise<{ up
     return response.data;
 };
 
+
 // events
 export const createEvent = async (data: {
   title: string;
@@ -106,6 +107,7 @@ export const getEventImageUploadUrl = async (contentType: string): Promise<{ upl
     return response.data;
 };
 
+
 // profiles
 export const followProfile = async (profileId: string): Promise<Profile> => {
   const response = await api.post<Profile>(`/profiles/${profileId}/follow`);
@@ -114,5 +116,21 @@ export const followProfile = async (profileId: string): Promise<Profile> => {
 
 export const unfollowProfile = async (profileId: string): Promise<Profile> => {
   const response = await api.post<Profile>(`/profiles/${profileId}/unfollow`);
+  return response.data;
+};
+
+
+// messaging
+export const getConversations = async (): Promise<Conversation[]> => {
+  const response = await api.get("/messaging/conversations");
+  return response.data;
+};
+
+export const getMessages = async (
+  conversationId: string
+): Promise<Message[]> => {
+  const response = await api.get(
+    `/messaging/conversations/${conversationId}/messages`
+  );
   return response.data;
 };

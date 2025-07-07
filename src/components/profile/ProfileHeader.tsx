@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Profile } from "@/types";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { UserPlus, MessageCircle, Edit, Camera, UserCheck } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useSWRConfig } from "swr";
@@ -42,8 +42,10 @@ export default function ProfileHeader({
       } else {
         await followProfile(profile._id);
       }
+
+      console.log({isFollowing})
       // Revalidate both the viewed profile and the authenticated user's profile
-      mutate(`/profiles/${profile.username}`);
+      mutate(`/profiles/${profile?.username}`);
       mutate(`/api/auth/session`);
     } catch (error) {
       console.error("Failed to follow/unfollow user:", error);

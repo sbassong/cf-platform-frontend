@@ -86,3 +86,27 @@ export interface Event {
   createdAt: string;
   updatedAt: string;
 }
+
+/**
+ * Represents a user-created message to be used
+ * within a conversation.
+ */
+export interface Message {
+  _id: string;
+  conversation: string;
+  sender: Profile;
+  content: string;
+  readBy: string[];
+  createdAt: string;
+}
+
+/**
+ * Represents a conversation between users
+ */
+export interface Conversation {
+  _id: string;
+  participants: Profile[];
+  lastMessage?: Message;
+  createdAt: string;
+  updatedAt: string;
+}
