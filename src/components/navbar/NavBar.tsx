@@ -5,6 +5,14 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
@@ -13,18 +21,10 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn, getInitials } from "@/lib/utils";
 import React from "react";
-// import { Users, Calendar, Compass } from "lucide-react";
+import { Edit, LogOut, Settings, MessageCircle } from "lucide-react";
 
 // const navLinks = [
 //   { href: "/", label: "Home" },
@@ -67,8 +67,8 @@ export default function Navbar() {
   const { user, signOut } = useAuth();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-4 lg:px-6 h-16 flex items-center bg-background/95 backdrop-blur-sm border-b">
-      <div className="container flex items-center">
+    <header className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center justify-center bg-background/95 backdrop-blur-sm border-b">
+      <div className=" flex items-center. justify-between w-full mx-4 ">
         <Link href="/" className="flex items-center justify-center mr-6">
           <span className="sr-only">Child-Free Platform</span>
           <h1 className="text-lg font-bold">CFP</h1>
@@ -76,12 +76,12 @@ export default function Navbar() {
 
         {user ? (
           // LOGGED-IN STATE (Main App Nav)
-          <>
+          <div className="flex flex-grow justify-between">
             <NavigationMenu>
               <NavigationMenuList>
                 {/* Feed Link */}
                 <NavigationMenuItem>
-                  <Link href="/" legacyBehavior passHref>
+                  <Link href="/" passHref>
                     <NavigationMenuLink
                       className={cn(
                         navigationMenuTriggerStyle(),
@@ -99,10 +99,10 @@ export default function Navbar() {
                   <NavigationMenuTrigger
                     className={cn(
                       "bg-transparent text-foreground/60 hover:text-foreground/80",
-                      (pathname.startsWith("/groups") ||
-                        pathname.startsWith("/events")) ||
-                        pathname.startsWith("/messages") &&
-                        "text-foreground font-semibold"
+                      pathname.startsWith("/groups") ||
+                        pathname.startsWith("/events") ||
+                        (pathname.startsWith("/messages") &&
+                          "text-foreground font-semibold")
                     )}
                   >
                     Community
@@ -124,51 +124,51 @@ export default function Navbar() {
               </NavigationMenuList>
             </NavigationMenu>
 
-            <div className="flex items-center gap-4 ml-auto">
+            <div className="flex items-center gap-4">
               <DropdownMenu modal={false}>
-                <DropdownMenuTrigger asChild data-cy="user-avatar-button">
-                  <Button
-                    variant="ghost"
-                    className="relative h-8 w-8 rounded-full"
-                  >
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-9 w-9">
-                      <AvatarImage
-                        src={user.profile?.avatarUrl || ""}
-                        alt={user.profile?.displayName || "User"}
-                      />
-                      <AvatarFallback>
-                        {getInitials(user.profile?.displayName || "")}
-                      </AvatarFallback>
+                      <AvatarImage src={user.profile?.avatarUrl || ""} alt={user.profile?.displayName || "User"} />
+                      <AvatarFallback>{getInitials(user.profile?.displayName || "")}</AvatarFallback>
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuContent className="w-64 py-2" align="end" forceMount>
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">
-                        {user.profile?.displayName}
-                      </p>
-                      <p className="text-xs leading-none text-muted-foreground">
-                        {user.email}
-                      </p>
+                      <p className="text-md font-semibold leading-none">{user.profile?.displayName}</p>
+                      <p className="text-sm leading-none text-muted-foreground">{user.email}</p>
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link href={`/profiles/${user.profile?.username}`}>
-                      Profile
+                  <DropdownMenuItem asChild className="py-2 text-md">
+                    <Link href={`/profiles/${user.profile.username}`}>
+                      <Edit className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={signOut}
-                    className="text-red-500 focus:text-red-500"
-                  >
-                    Sign out
+                  <DropdownMenuItem asChild className="py-2 text-md">
+                    <Link href="/messages">
+                      <MessageCircle className="mr-2 h-4 w-4" />
+                      <span>Messages</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="py-2 text-md">
+                    <Link href="/settings">
+                      <Settings className="mr-2 h-4 w-4" />
+                      <span>Settings</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={signOut} className="text-md text-red-500 focus:text-red-500 hover:bg-red-500/10 py-2 ">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Sign Out</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-          </>
+          </div>
         ) : (
           // LOGGED-OUT STATE (Landing Page Nav)
           <nav className="ml-auto flex gap-4 sm:gap-6">

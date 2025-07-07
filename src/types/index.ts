@@ -11,7 +11,7 @@ export interface Profile {
   bio?: string;
   location?: string;
   interests?: string[];
-  userId: string; // Ref back to the User document
+  userId: string; 
   followers?: string[];
   following?: string[];
   followingCount: number;

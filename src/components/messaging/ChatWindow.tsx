@@ -2,7 +2,7 @@
 
 import useSWR from 'swr';
 import { fetcher } from '@/lib/api';
-import { Message, Profile } from '@/types';
+import { Message } from '@/types';
 import { useAuth } from '@/context/AuthContext';
 import { useMessagingSocket } from '@/hooks/use-messaging-socket';
 

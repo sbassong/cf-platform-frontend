@@ -1,7 +1,5 @@
 import axios from "axios";
-import { Group } from "@/types";
-import { Profile } from "@/types";
-import { Post } from "@/types";
+import { Group, Profile, Post, Conversation, Message } from "@/types";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL,
@@ -118,6 +116,14 @@ export const unfollowProfile = async (profileId: string): Promise<Profile> => {
   const response = await api.post<Profile>(`/profiles/${profileId}/unfollow`);
   return response.data;
 };
+  // messaging-related
+export const searchProfiles = async (query: string): Promise<Profile[]> => {
+  console.log({query})
+  if (!query) return [];
+  const response = await api.get(`/profiles/search?q=${query}`);
+  console.log({searRes: response})
+  return response.data;
+};
 
 
 // messaging
@@ -132,5 +138,12 @@ export const getMessages = async (
   const response = await api.get(
     `/messaging/conversations/${conversationId}/messages`
   );
+  return response.data;
+};
+
+export const findOrCreateConversation = async (
+  otherUserId: string
+): Promise<Conversation> => {
+  const response = await api.post("/messaging/conversations", { otherUserId });
   return response.data;
 };

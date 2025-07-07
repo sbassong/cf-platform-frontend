@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { Profile } from "@/types";
-import { useRouter } from "next/navigation";
 import { UserPlus, MessageCircle, Edit, Camera, UserCheck } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useSWRConfig } from "swr";
@@ -24,7 +23,6 @@ export default function ProfileHeader({
   onBannerEditClick,
 }: ProfileHeaderProps) {
   const { user: authenticatedUser } = useAuth();
-  const router = useRouter();
   const { mutate } = useSWRConfig();
 
   const isOwner = authenticatedUser?.profile?._id === profile._id;
@@ -34,22 +32,43 @@ export default function ProfileHeader({
   );
 
   const handleFollowToggle = async () => {
-    if (!authenticatedUser) return router.push("/signin");
+    if (!authenticatedUser) return;
 
+    // using the Optimistic UI Update approach as a fix for mutate not working here
+
+    // 1. Define the optimistic data immediately
+    const updatedProfileData = isFollowing
+      ? { ...profile, followersCount: profile.followersCount - 1 }
+      : { ...profile, followersCount: profile.followersCount + 1 };
+
+    const updatedUserData = isFollowing
+      ? { ...authenticatedUser, profile: { ...authenticatedUser.profile, following: (authenticatedUser?.profile?.following ?? []).filter(id => id !== profile._id) } }
+      : { ...authenticatedUser, profile: { ...authenticatedUser.profile, following: [...(authenticatedUser?.profile?.following ?? []), profile._id] } };
+
+    // 2. Mutate the local SWR cache instantly with the new data
+    // The `false` at the end tells SWR not to revalidate immediately
+    mutate(`/profiles/${profile.username}`, updatedProfileData, false);
+    mutate('/auth/session', updatedUserData, false);
+
+    // 3. Make the actual API call
     try {
       if (isFollowing) {
         await unfollowProfile(profile._id);
       } else {
         await followProfile(profile._id);
       }
-
-      console.log({isFollowing})
-      // Revalidate both the viewed profile and the authenticated user's profile
-      mutate(`/profiles/${profile?.username}`);
-      mutate(`/api/auth/session`);
     } catch (error) {
       console.error("Failed to follow/unfollow user:", error);
+      // If the API call fails, revert the optimistic updates
+      mutate(`/profiles/${profile.username}`, profile, false);
+      mutate('/auth/session', authenticatedUser, false);
+    } finally {
+      // 4. After the API call (success or fail), revalidate to ensure data consistency
+      mutate(`/profiles/${profile.username}`);
+      mutate('/auth/session');
     }
+
+    console.log({profile})
   };
 
   return (
