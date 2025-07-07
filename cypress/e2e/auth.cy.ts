@@ -21,7 +21,7 @@ describe("Authentication Flow", () => {
     cy.intercept("POST", "**/auth/signup").as("signupRequest");
 
     // Fill out the form
-    cy.get("[data-cy=signup-display-name]").type(uniqueUser.displayName);
+    cy.get("[data-cy=signup-displayName]").type(uniqueUser.displayName);
     cy.get("[data-cy=signup-username]").type(uniqueUser.username);
     cy.get("[data-cy=signup-email]").type(uniqueUser.email);
     cy.get('[data-cy="signup-password"]').type(uniqueUser.password);

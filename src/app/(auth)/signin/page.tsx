@@ -1,12 +1,24 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+
 
 export default function SigninPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -49,90 +61,83 @@ export default function SigninPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="max-w-md w-full space-y-8 p-8 bg-black rounded-2xl shadow-md">
-        <h2 className="text-center text-2xl font-bold">Sign in</h2>
+    <div className="flex items-center justify-center min-h-screen">
+      <Card className="w-full max-w-sm" data-cy="signin-card">
+        <CardHeader>
+          <CardTitle>Sign In</CardTitle>
+          <CardDescription>
+            Choose your preferred sign-in method
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          {/* Google Sign-In */}
+          <Button
+            variant="outline"
+            className="w-full flex items-center gap-2 border-primary border-2 h-12 hover:bg-primary/20"
 
-        <div className="space-y-2">
-          <button
             onClick={handleGoogleLogin}
-            className="w-full bg-red-500 text-white py-2 rounded px-4 hover:bg-red-700"
             data-cy="google-signin-button"
           >
-            Sign in with Google
-          </button>
-        </div>
+            <div className="relative h-5 w-5 group">
+              <Image
+                src="google-icon.svg"
+                alt="Google's G icon"
+                fill
+                priority
+              />
+            </div>
+            Sign In with Google
+          </Button>
 
-        <div className="flex items-center justify-center gap-2 my-4">
-          <div className="border-t w-full" />
-          <span className="text-gray-400">or</span>
-          <div className="border-t w-full" />
-        </div>
+          <Separator className="my-4" />
 
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-          Sign In to Your Account
-        </h2>
+          {/* Credentials signin form  */}
+          <form onSubmit={handleCredentialsLogin} className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="m@example.com"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                data-cy="signin-email"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                data-cy="signin-password"
+              />
+            </div>
 
-        <form onSubmit={handleCredentialsLogin} className="space-y-4">
-          {error && <p className="text-red-500">{error}</p>}
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Email Address
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              data-cy="signin-email"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
+            {error && (
+              <p className="text-sm text-red-500" data-cy="signin-error">
+                {error}
+              </p>
+            )}
 
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              data-cy="signin-password"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
+            <Button type="submit" className="w-full" data-cy="signin-submit">
+              {isLoading ? "Signing In..." : "Sign In with email"}
+            </Button>
+          </form>
+        </CardContent>
 
-          <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              data-cy="signin-submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400"
-            >
-              {isLoading ? "Signing In..." : "Sign In"}
-            </button>
-          </div>
-        </form>
-
-        <p className="mt-4 text-center text-sm text-gray-600">
-          Don&apos;t have an account?{" "}
-          <Link
-            href="/signup"
-            className="font-medium text-blue-600 hover:text-blue-500"
-          >
-            Sign Up
-          </Link>
-        </p>
-      </div>
+        <CardFooter className="flex justify-center">
+          <p className="text-sm">
+            Don&apos;t have an account?{" "}
+            <Link href="/signup" className="underline">
+              Sign up
+            </Link>
+          </p>
+        </CardFooter>
+      </Card>
     </div>
   );
 }

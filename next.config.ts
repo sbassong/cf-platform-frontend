@@ -35,6 +35,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "cf-platform-assets.s3.us-west-2.amazonaws.com",
       },
+      {
+        protocol: "https",
+        hostname: "cf-platform-assets.s3.amazonaws.com",
+      },
     ],
   },
 };
