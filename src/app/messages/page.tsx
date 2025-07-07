@@ -1,22 +1,40 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ConversationList from '../../components/messaging/ConversationList';
 import ChatWindow from '../../components/messaging/ChatWindow';
 import StartConversationModal from '@/components/messaging/StartConversationModal';
 import { Button } from '@/components/ui/button';
 import { MessageSquarePlus } from 'lucide-react';
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 
 export default function MessagesPage() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams()
+  const initialConversationId = searchParams.get('id');
+
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    // ensures chat is selected if user navigates here directly
+    if (initialConversationId) {
+      setSelectedConversationId(initialConversationId);
+    }
+  }, [initialConversationId]);
+
+  const handleSelectConversation = (conversationId: string) => {
+    setSelectedConversationId(conversationId);
+    router.push(`${pathname}?id=${conversationId}`);
+  };
 
   return (
     <>
       <StartConversationModal
         isOpen={isModalOpen}
         onOpenChange={setIsModalOpen}
-        onConversationSelect={setSelectedConversationId}
+        onConversationSelect={handleSelectConversation}
       />
       <div className="h-[calc(100vh-3.5rem)] grid grid-cols-[300px_1fr] border-t">
         <aside className="flex flex-col mt-2">
@@ -28,7 +46,7 @@ export default function MessagesPage() {
           </div>
           <ConversationList
             selectedConversationId={selectedConversationId}
-            onSelectConversation={setSelectedConversationId}
+            onSelectConversation={handleSelectConversation}
           />
         </aside>
         <main className="h-full">

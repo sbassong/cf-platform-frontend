@@ -31,7 +31,6 @@ export default function StartConversationModal({ isOpen, onOpenChange, onConvers
   const handleSelectProfile = async (profile: Profile) => {
     try {
       const conversation = await findOrCreateConversation(profile._id);
-      console.log({conversation})
       onOpenChange(false);
       onConversationSelect(conversation._id); // Select the new conversation
     } catch (error) {

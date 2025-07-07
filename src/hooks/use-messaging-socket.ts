@@ -22,15 +22,16 @@ export function useMessagingSocket(conversationId: string | null) {
     // Join the specific conversation's "room"
     newSocket.emit("joinRoom", conversationId);
 
-    // Listen for new messages
+    // listen for new messages
     newSocket.on("newMessage", (newMessage: Message) => {
       // When a new message arrives, optimistically update the cache
       // and revalidate to keep the data fresh.
       mutate(
         `/messaging/conversations/${conversationId}/messages`,
         (currentMessages: Message[] = []) => [...currentMessages, newMessage],
-        false // Do not revalidate immediately, optimistic update is enough
+        false // no need to revalidate immediately, optimistic update is enough
       );
+      mutate("/messaging/conversations"); // revalidate conversations as well
     });
 
     // Cleanup on component unmount

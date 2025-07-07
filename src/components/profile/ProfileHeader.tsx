@@ -1,12 +1,13 @@
 import Image from "next/image";
 import { Profile } from "@/types";
 import { UserPlus, MessageCircle, Edit, Camera, UserCheck } from "lucide-react";
+import { useRouter } from 'next/navigation';
 import { useAuth } from "@/context/AuthContext";
 import { useSWRConfig } from "swr";
 import { getInitials } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { followProfile, unfollowProfile } from "@/lib/api";
+import { followProfile, unfollowProfile, findOrCreateConversation } from "@/lib/api";
 import SignOutButton from "./SignOutButton";
 
 interface ProfileHeaderProps {
@@ -24,12 +25,21 @@ export default function ProfileHeader({
 }: ProfileHeaderProps) {
   const { user: authenticatedUser } = useAuth();
   const { mutate } = useSWRConfig();
+  const router = useRouter()
 
   const isOwner = authenticatedUser?.profile?._id === profile._id;
-  // Determine if the authenticated user is following the viewed profile
   const isFollowing = authenticatedUser?.profile?.following?.includes(
     profile._id
   );
+
+  const handleStartConversation = async () => {
+    try {
+      const conversation = await findOrCreateConversation(profile._id);
+      router.push(`/messages?id=${conversation._id}`);
+    } catch (error) {
+      console.error("Failed to start conversation:", error);
+    }
+  };
 
   const handleFollowToggle = async () => {
     if (!authenticatedUser) return;
@@ -168,7 +178,7 @@ export default function ProfileHeader({
                 </>
               ) : (
                 <>
-                  <Button className="flex items-center space-x-2">
+                    <Button className="flex items-center space-x-2" onClick={handleStartConversation}>
                     <MessageCircle size={16} />
                     <span>Message</span>
                   </Button>
