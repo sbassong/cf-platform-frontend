@@ -110,3 +110,10 @@ export interface Conversation {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface SearchResults {
+  profiles: Profile[];
+  posts: Post[];
+  groups: Group[];
+  events: Event[];
+}
