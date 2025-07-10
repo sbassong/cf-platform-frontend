@@ -25,6 +25,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn, getInitials } from "@/lib/utils";
 import React from "react";
 import { Edit, LogOut, Settings, MessageCircle } from "lucide-react";
+import SearchBar from "../search/SearchBar";
 
 // const navLinks = [
 //   { href: "/", label: "Home" },
@@ -77,6 +78,8 @@ export default function Navbar() {
         {user ? (
           // LOGGED-IN STATE (Main App Nav)
           <div className="flex flex-grow justify-between">
+            <SearchBar /> 
+
             <NavigationMenu>
               <NavigationMenuList>
                 {/* Feed Link */}

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Group, Profile, Post, Conversation, Message } from "@/types";
+import { Group, Profile, Post, Conversation, Message, SearchResults } from "@/types";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL,
@@ -143,5 +143,12 @@ export const findOrCreateConversation = async (
   otherUserId: string
 ): Promise<Conversation> => {
   const response = await api.post("/messaging/conversations", { otherUserId });
+  return response.data;
+};
+
+// search
+export const searchAll = async (query: string): Promise<SearchResults> => {
+  if (!query) return { profiles: [], posts: [], groups: [], events: [] };
+  const response = await api.get<SearchResults>(`/search?q=${query}`);
   return response.data;
 };
