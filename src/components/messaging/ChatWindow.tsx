@@ -1,11 +1,11 @@
 'use client';
 
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 import { fetcher } from '@/lib/api';
 import { Message } from '@/types';
 import { useAuth } from '@/context/AuthContext';
 import { useMessagingSocket } from '@/hooks/use-messaging-socket';
-
+import { markConversationAsRead } from '@/lib/api'
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
@@ -34,7 +34,12 @@ export default function ChatWindow({ conversationId }: ChatWindowProps) {
     if (scrollAreaRef.current) {
       scrollAreaRef.current.scrollTo({ top: scrollAreaRef.current.scrollHeight });
     }
-  }, [messages]);
+
+    if (conversationId && messages && messages.length > 0) {
+      markConversationAsRead(conversationId);
+      mutate('/messaging/conversations'); // to clear the unread indicator
+    }
+  }, [messages, conversationId]);
 
   const handleSend = () => {
     if (content.trim()) {

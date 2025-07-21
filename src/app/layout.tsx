@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import Providers from "../context/Providers";
 import Navbar from "@/components/navbar/NavBar";
 import { cn } from "@/lib/utils";
@@ -24,6 +25,7 @@ export default function RootLayout({
         <Providers>
           <Navbar />
           {children}
+          <SonnerToaster />
         </Providers>
       </body>
     </html>
