@@ -221,3 +221,13 @@ export const updateNotificationSettings = async (
   const response = await api.patch<User>("/users/me/notifications", data);
   return response.data;
 };
+
+export const blockUser = async (userId: string): Promise<User> => {
+  const response = await api.post<User>(`/users/${userId}/block`);
+  return response.data;
+};
+
+export const unblockUser = async (userId: string): Promise<User> => {
+  const response = await api.post<User>(`/users/${userId}/unblock`);
+  return response.data;
+};
