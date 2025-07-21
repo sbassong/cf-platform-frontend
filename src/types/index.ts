@@ -20,6 +20,13 @@ export interface Profile {
   updatedAt: string;
 }
 
+export interface NotificationSettingsPayload {
+  newFollower?: boolean;
+  newPostInGroup?: boolean;
+  eventReminder?: boolean;
+  directMessage?: boolean;
+}
+
 /**
  * Represents the authenticated user's core data.
  * This aligns with the User schema in the NestJS backend and is primarily
@@ -32,6 +39,7 @@ export interface User {
   provider: "google" | "credentials";
   emailVerified: boolean;
   isActive: boolean;
+  notifications: NotificationSettingsPayload
   profile: Profile; // user's profile is a nested object.
   createdAt: string;
   updatedAt: string;
@@ -117,3 +125,4 @@ export interface SearchResults {
   groups: Group[];
   events: Event[];
 }
+

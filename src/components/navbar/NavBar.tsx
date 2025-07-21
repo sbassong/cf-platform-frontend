@@ -1,8 +1,12 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import useSWR from 'swr';
+import { Conversation } from '@/types';
+import { fetcher } from '@/lib/api';
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -23,7 +27,6 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn, getInitials } from "@/lib/utils";
-import React from "react";
 import { Edit, LogOut, Settings, MessageCircle } from "lucide-react";
 import SearchBar from "../search/SearchBar";
 
@@ -66,6 +69,19 @@ ListItem.displayName = "ListItem";
 export default function Navbar() {
   const pathname = usePathname();
   const { user, signOut } = useAuth();
+
+  const { data: conversations } = useSWR<Conversation[]>(
+    user ? '/messaging/conversations' : null,
+    fetcher
+  );
+
+  const unreadCount = conversations?.filter(convo =>
+    convo.lastMessage &&
+    convo.lastMessage.sender._id !== user?.profile._id &&
+    user?.profile._id &&
+    !convo.lastMessage.readBy.includes(user.profile._id)
+  ).length || 0;
+
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center justify-center bg-background/95 backdrop-blur-sm border-b">
@@ -130,11 +146,17 @@ export default function Navbar() {
             <div className="flex items-center gap-4">
               <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
+                  
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-9 w-9">
                       <AvatarImage src={user.profile?.avatarUrl || ""} alt={user.profile?.displayName || "User"} />
                       <AvatarFallback>{getInitials(user.profile?.displayName || "")}</AvatarFallback>
                     </Avatar>
+                    {unreadCount > 0 && (
+                      <span className="absolute bottom-6 left-6 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
+                        {unreadCount}
+                      </span>
+                    )}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-64 py-2" align="end" forceMount>
@@ -155,6 +177,11 @@ export default function Navbar() {
                     <Link href="/messages">
                       <MessageCircle className="mr-2 h-4 w-4" />
                       <span>Messages</span>
+                      {unreadCount > 0 && (
+                        <span className=" flex h-4 w-4 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
+                          {unreadCount}
+                        </span>
+                      )}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild className="py-2 text-md">
