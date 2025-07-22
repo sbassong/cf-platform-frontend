@@ -1,13 +1,33 @@
 import Image from "next/image";
 import { Profile } from "@/types";
-import { UserPlus, MessageCircle, Edit, Camera, UserCheck } from "lucide-react";
-import { useRouter } from 'next/navigation';
+import {
+  UserPlus,
+  MessageCircle,
+  Edit,
+  Camera,
+  UserCheck,
+  UserX,
+  MoreHorizontal,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useSWRConfig } from "swr";
 import { getInitials } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { followProfile, unfollowProfile, findOrCreateConversation } from "@/lib/api";
+import {
+  followProfile,
+  unfollowProfile,
+  findOrCreateConversation,
+  unblockUser,
+  blockUser,
+} from "@/lib/api";
 import SignOutButton from "./SignOutButton";
 
 interface ProfileHeaderProps {
@@ -25,12 +45,14 @@ export default function ProfileHeader({
 }: ProfileHeaderProps) {
   const { user: authenticatedUser } = useAuth();
   const { mutate } = useSWRConfig();
-  const router = useRouter()
+  const router = useRouter();
 
   const isOwner = authenticatedUser?.profile?._id === profile._id;
   const isFollowing = authenticatedUser?.profile?.following?.includes(
     profile._id
   );
+  const isBlocked = authenticatedUser?.blockedUsers?.includes(profile?.userId);
+
 
   const handleStartConversation = async () => {
     try {
@@ -38,6 +60,19 @@ export default function ProfileHeader({
       router.push(`/messages?id=${conversation._id}`);
     } catch (error) {
       console.error("Failed to start conversation:", error);
+    }
+  };
+
+  const handleBlockToggle = async () => {
+    try {
+      if (isBlocked) {
+        await unblockUser(profile.userId);
+      } else {
+        await blockUser(profile.userId);
+      }
+      mutate('/auth/session');
+    } catch (error) {
+      console.error('Failed to block/unblock user:', error);
     }
   };
 
@@ -52,13 +87,30 @@ export default function ProfileHeader({
       : { ...profile, followersCount: profile.followersCount + 1 };
 
     const updatedUserData = isFollowing
-      ? { ...authenticatedUser, profile: { ...authenticatedUser.profile, following: (authenticatedUser?.profile?.following ?? []).filter(id => id !== profile._id) } }
-      : { ...authenticatedUser, profile: { ...authenticatedUser.profile, following: [...(authenticatedUser?.profile?.following ?? []), profile._id] } };
+      ? {
+          ...authenticatedUser,
+          profile: {
+            ...authenticatedUser.profile,
+            following: (authenticatedUser?.profile?.following ?? []).filter(
+              (id) => id !== profile._id
+            ),
+          },
+        }
+      : {
+          ...authenticatedUser,
+          profile: {
+            ...authenticatedUser.profile,
+            following: [
+              ...(authenticatedUser?.profile?.following ?? []),
+              profile._id,
+            ],
+          },
+        };
 
     // 2. Mutate the local SWR cache instantly with the new data
     // The `false` at the end tells SWR not to revalidate immediately
     mutate(`/profiles/${profile.username}`, updatedProfileData, false);
-    mutate('/auth/session', updatedUserData, false);
+    mutate("/auth/session", updatedUserData, false);
 
     // 3. Make the actual API call
     try {
@@ -71,11 +123,11 @@ export default function ProfileHeader({
       console.error("Failed to follow/unfollow user:", error);
       // If the API call fails, revert the optimistic updates
       mutate(`/profiles/${profile.username}`, profile, false);
-      mutate('/auth/session', authenticatedUser, false);
+      mutate("/auth/session", authenticatedUser, false);
     } finally {
       // 4. After the API call (success or fail), revalidate to ensure data consistency
       mutate(`/profiles/${profile.username}`);
-      mutate('/auth/session');
+      mutate("/auth/session");
     }
   };
 
@@ -176,7 +228,10 @@ export default function ProfileHeader({
                 </>
               ) : (
                 <>
-                    <Button className="flex items-center space-x-2" onClick={handleStartConversation}>
+                  <Button
+                    className="flex items-center space-x-2"
+                    onClick={handleStartConversation}
+                  >
                     <MessageCircle size={16} />
                     <span>Message</span>
                   </Button>
@@ -191,6 +246,22 @@ export default function ProfileHeader({
                     )}
                     {isFollowing ? "Following" : "Follow"}
                   </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          className={isBlocked ? 'text-yellow-600' : 'text-red-500'}
+                          onClick={handleBlockToggle}
+                        >
+                          <UserX className="mr-2 h-4 w-4" />
+                          <span>{isBlocked ? 'Unblock' : 'Block'} @{profile.username}</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                 </>
               )}
             </div>

@@ -39,8 +39,10 @@ export interface User {
   provider: "google" | "credentials";
   emailVerified: boolean;
   isActive: boolean;
-  notifications: NotificationSettingsPayload
+  notifications: NotificationSettingsPayload;
   profile: Profile; // user's profile is a nested object.
+  blockedUsers: User[];
+  blockedBy: User[];
   createdAt: string;
   updatedAt: string;
 }
