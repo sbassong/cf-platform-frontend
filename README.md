@@ -1,16 +1,12 @@
 # Child-Free Platform - Frontend
 
 <p align="center">
-  <!-- <a href="#">
-    <img src="https://raw.githubusercontent.com/authjs/next-auth/main/docs/static/img/logo.svg" alt="Logo" width="80" height="80">
-  </a> -->
   <h3 align="center">Next.js Frontend for the Child-Free Community Platform</h3>
   <p align="center">
-    A modern, full-stack web application built with Next.js, Auth.js (NextAuth.js v5), and TypeScript, featuring a hybrid authentication system to bridge NextAuth.js sessions with a 
-    <a href="https://github.com/sbassong/cf-platform-backend">custom Nest.js backend</a>.
+    A prototype full-stack social application built with Next.js 15, Auth.js , and TypeScript. It features a hybrid authentication system, real-time messaging, and community engagement tools.
     <br />
     <br />
-    <a href="#">View Demo</a>
+    <!-- <a href="#">View Demo (in progres)</a> -->
   </p>
 </p>
 
@@ -20,6 +16,7 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
+        <li><a href="#key-features">Key Features</a></li>
         <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
@@ -36,7 +33,7 @@
     <li><a href="#architecture-overview">Architecture Overview</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#license">License</a></li>
-    <li><a href="#license">Contact</a></li>
+    <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
 
@@ -44,25 +41,34 @@
 
 ## About The Project
 
-This repository contains the frontend portion of the **CF Platform**, a social application designed for the child-free community. It is a modern Next.js application featuring a hybrid authentication system that integrates two distinct session management strategies.
+This repository contains the frontend portion of the **CF Platform**, a dedicated social space for the child-free community. It connects with a [NestJS backend](https://github.com/sbassong/cf-platform-backend) to provide a secure and interactive user experience.
 
-The key architectural highlights include:
+The application leverages a **Hybrid Session Architecture**:
+* **Social Login**: Google OAuth is managed by **Auth.js (NextAuth v5)**.
+* **Credentials**: Email/Password login is handled directly by the **NestJS backend**.
+* **Session Bridge**: A specialized bridging mechanism synchronizes the NextAuth session with the backend's cookie-based HTTP-only session, to ensure a unified state across the app.
 
-* **Google OAuth Login**: Securely managed end-to-end using **Auth.js (NextAuth.js v5)**, which handles the OAuth 2.0 flow and its own server-side session management.
-* **Credentials-Based Authentication**: Traditional email and password sign-in and sign-up are handled by a separate **NestJS backend service**. This frontend communicates directly with it for these tasks.
-* **Hybrid Session Synchronization**: A unique "bridge" page architecture ensures a unified user experience. After a successful Google login via NextAuth.js, the user is seamlessly redirected to create a parallel, cookie-based session with the NestJS backend, ensuring consistent authentication state across the entire platform.
+### Key Features
+
+* **Community Groups**: Discover, create, and join interest-based groups to connect with like-minded individuals.
+* **Events & Meetups**: Browse upcoming local and virtual events, create new ones, and manage RSVPs.
+* **Real-Time Messaging**: Instant private messaging powered by **Socket.io**, featuring read receipts and live updates.
+* **Customizable Profiles**: Users can edit their bio, location, and interests, and view their event/group history.
+* **Secure Authentication**: Robust protection using JWTs and secure session cookies.
 
 ### Built With
 
 This project is built with a modern, type-safe, and performant technology stack.
 
-* [Next.js](https://nextjs.org/docs)
-* [React](https://react.dev/learn)
-* [TypeScript](https://www.typescriptlang.org/docs/handbook/typescript-from-scratch.html)
-* [Auth.js](https://authjs.dev/getting-started)
+* [Next.js](https://nextjs.org/)
+* [React](https://react.dev/)
+* [TypeScript](https://www.typescriptlang.org/)
+* [Auth.js](https://authjs.dev/) 
+* [SWR](https://swr.vercel.app/) - for data fetching
+* [Socket.io Client](https://socket.io/) - Real-time event-based communication
 * [TailwindCSS](https://tailwindcss.com/)
-* [Axios](https://axios-http.com/docs/intro)
-* [Cypress](https://docs.cypress.io/app/get-started/why-cypress)
+* [Shadcn UI](https://ui.shadcn.com/)
+* [Cypress](https://www.cypress.io/) - End-to-End Testing
 
 ## Getting Started
 
@@ -70,12 +76,11 @@ To get a local copy up and running, follow these steps.
 
 ### Prerequisites
 
-You must have Node.js (version 22.x or higher) and npm installed on your machine.
+You must have **Node.js 22** (or higher) and **npm** installed on your machine.
 
-* npm
-    ```sh
-    npm install npm@latest -g
-    ```
+```sh
+npm install npm@latest -g
+```
 
 ### Installation
 
@@ -115,6 +120,7 @@ NEXTAUTH_URL="http://localhost:3000"
 # The URL for your corresponding NestJS backend service.
 NEXT_PUBLIC_LOCAL_BACKEND_URL="http://localhost:3001"
 ```
+
 ## Usage
 
 Once the environment variables are set, you can run the development server:
@@ -129,73 +135,59 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Running Tests
 
-This project uses Cypress for end-to-end (E2E) testing to ensure the reliability of key user flows.
+This project uses **Cypress** for end-to-end (E2E) testing to ensure the reliability of key user flows.
 
-### End-to-End Tests
+### End-to-End Tests (In progress)
 
-The E2E test suite currently covers the following scenarios:
-* **Authentication**: Signin and signup with credentials, mock provider signin, and signout.
-
+The E2E test suite currently covers:
+* **Authentication**: Sign-in/Sign-up (Credentials & OAuth), Sign-out, and Session Bridging.
 
 ### How to Run E2E Tests
 
-1. **Start the development server**: Before running tests, ensure your Next.js application is running.
-
+1.  **Start the development server**:
     ```sh
     npm run dev
     ```
 
-2. **Open the Cypress Test Runner**: In a separate terminal window, from the project root, run the following command:
-
+2.  **Open the Cypress Test Runner**:
+    In a separate terminal window, run:
     ```sh
     npx cypress open
     ```
 
-3. In the Cypress dashboard, choose **E2E Testing**, select your preferred browser, and click on `auth.cy.ts` to execute the authentication test suite.
+3.  Select **E2E Testing**, choose your browser, and run the desired spec files.
 
-
+---
 
 ## Architecture Overview
 
-### Authentication (`/auth.ts`)
+### Authentication & Sessions
+* **`/auth.ts`**: Configures Auth.js providers and callbacks.
+* **`src/app/context/AuthContext.tsx`**: Provides a global `useAuth` hook that unifies NextAuth and Backend sessions into a single user object.
+* **`src/app/(auth)/bridge`**: HHndles the synchronization of Google OAuth sessions with the backend database.
 
-The core of the Google OAuth integration is managed here. It uses **Auth.js v5** and defines the providers and callbacks required for the login flow and session management.
+### Data Fetching
+* **SWR**: Used throughout the application (e.g., `useSWR('/events', fetcher)`) for efficient, cached, and optimistic UI updates.
+* **`src/lib/api.ts`**: Contains the core `fetcher` and API utility functions.
 
-### API Routes (`/src/app/api/`)
-
-- **`api/auth/[...nextauth]/route.ts`**  
-  This file exposes the Auth.js handlers to the Next.js routing system, enabling features like sign-in, sign-out, and session retrieval for NextAuth.
-
-- **`api/auth/session/route.tsx`**  
-  A custom proxy endpoint used by the `AuthContext` to check the status of a user's session with the NestJS backend.
-
-### Session Management (`/src/app/context/AuthContext.tsx`)
-
-A custom React context that creates a unified authentication state. It checks for either a NextAuth.js session (for Google users) or a NestJS session (for credentials users) and provides a consistent `user` object and `isLoading` state to the entire application.
-
-### Session Bridge (`/src/app/(auth)/bridge`)
-
-This is a critical component of the hybrid system.
-
-- **`page.tsx`**  
-  A server component that runs immediately after a successful Google login. It uses the server-side `auth()` helper to get the session and passes it to the client component.
-
-- **`AuthBridgeClient.tsx`**  
-  A client component that receives the session data and makes a fetch request to the NestJS backend, prompting it to set its own `access_token` cookie. This synchronizes the user's session across both systems.
-
-### Testing (`/cypress`): 
-Contains all end-to-end tests. Also contains `support/commands.ts` which contains reusable and custom commands imported through support file `support/e2e.ts`.
+### Real-Time Communication
+* **`src/hooks/use-messaging-socket.ts`**: A custom hook that manages the Socket.io connection, handling events like `sendMessage` and `receiveMessage` for the chat functionality.
 
 ---
 
 ## Roadmap
 
-- [ ] Implement user profile editing.
-- [ ] Develop a real-time chat feature.
-- [ ] Add event creation and RSVPs.
-- [ ] Build out a forum/discussion board.
+The following features have been implemented or are planned:
 
-See the [open issues](https://github.com/sbassong/cf-platform-frontend/issues) for a full list of proposed features (and known issues).
+- [x] **User Authentication** (Google & credentials)
+- [x] **User Profile Editing** (Bio, location, Interests)
+- [x] **Events System** (Create, View, Attend)
+- [x] **Groups & Communities** (Create, Join, Post)
+- [x] **Real-time Chat** (live messaging)
+- [ ] Advanced moderation tools
+- [ ] Push Notifications
+- [ ] Mobile-responsive optimizations
+- [ ] Mobile app migration
 
 ---
 
@@ -208,5 +200,3 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 ## Contact
 
 Samuel Bassong – sam.bassong@gmail.com - [linkedin.com/in/sambassong](https://www.linkedin.com/in/sambassong/)
-
-Project Link: [https://github.com/sbassong/cf-platform-frontend](https://github.com/sbassong/cf-platform-frontend)
