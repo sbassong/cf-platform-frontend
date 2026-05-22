@@ -34,14 +34,14 @@ export const config = {
         }
         try {
           const oauthRes = await axios.post(
-            `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/users/oauth`,
+            `${process.env.NEXT_PUBLIC_LIVE_BACKEND_URL || process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/users/oauth`,
             {
               email: profile.email,
               name: profile.name,
               avatarUrl: profile.picture,
               provider: account.provider,
               providerId: user.id, // 'sub' from the JWT is typically the user.id
-            }
+            },
           );
           return oauthRes
           return true;

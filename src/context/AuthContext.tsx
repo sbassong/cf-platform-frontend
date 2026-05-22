@@ -27,10 +27,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const { mutate } = useSWRConfig();
 
   const signOut = async () => {
-    await fetch(`${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/signout`, {
-      method: "POST",
-      credentials: "include",
-    });
+    await fetch(
+      `${process.env.NEXT_PUBLIC_LIVE_BACKEND_URL || process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/signout`,
+      {
+        method: "POST",
+        credentials: "include",
+      },
+    );
     await nextAuthSignOut({ redirect: false });
 
     mutate("/auth/session", null, false);

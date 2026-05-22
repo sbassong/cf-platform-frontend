@@ -72,13 +72,13 @@ export default function EditProfileModal({
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/profiles/${profile._id}`,
+        `${process.env.NEXT_PUBLIC_LIVE_BACKEND_URL || process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/profiles/${profile._id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
           body: JSON.stringify(updatedData),
-        }
+        },
       );
 
       if (!res.ok) {

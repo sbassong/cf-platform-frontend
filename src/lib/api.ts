@@ -11,7 +11,7 @@ import {
 } from "@/types";
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL,
+  baseURL: process.env.NEXT_PUBLIC_LIVE_BACKEND_URL || process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL,
   withCredentials: true,
 });
 

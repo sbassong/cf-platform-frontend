@@ -14,13 +14,13 @@ export async function GET(req: NextRequest) {
 
   try {
     const backendResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/session`,
+      `${process.env.NEXT_PUBLIC_LIVE_BACKEND_URL || process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/session`,
       {
         headers: {
           Cookie: `access_token=${accessTokenCookie?.value}`,
         },
         cache: "no-store",
-      }
+      },
     );
 
     const data = await backendResponse.json();

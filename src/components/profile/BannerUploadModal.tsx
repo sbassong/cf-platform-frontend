@@ -41,13 +41,13 @@ export default function BannerUploadModal({
     try {
       // Use the dedicated banner endpoint
       const resUrl = await fetch(
-        `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/profiles/banner-upload-url`,
+        `${process.env.NEXT_PUBLIC_LIVE_BACKEND_URL || process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/profiles/banner-upload-url`,
         {
           method: "POST",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ contentType: file.type }),
-        }
+        },
       );
       const { uploadUrl, publicUrl } = await resUrl.json();
 
@@ -58,13 +58,13 @@ export default function BannerUploadModal({
       });
 
       const updateRes = await fetch(
-        `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/profiles/${profile._id}`,
+        `${process.env.NEXT_PUBLIC_LIVE_BACKEND_URL || process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/profiles/${profile._id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
           body: JSON.stringify({ bannerUrl: publicUrl }),
-        }
+        },
       );
 
       if (!updateRes.ok)
