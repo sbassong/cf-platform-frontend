@@ -5,8 +5,8 @@
   <p align="center">
     A prototype full-stack social application built with Next.js 15, Auth.js , and TypeScript. It features a hybrid authentication system, real-time messaging, and community engagement tools.
     <br />
-    <br />
-    <!-- <a href="#">View Demo (in progres)</a> -->
+        <br />
+    <a href="https://github.com/sbassong/cf-platform-backend">View Backebd Repository</a>
   </p>
 </p>
 

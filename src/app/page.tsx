@@ -10,9 +10,9 @@ export default async function HomePage() {
   const backendToken = cookieStore.get("access_token")?.value;
 
   // The user is considered logged in if EITHER session exists.
-  if (!nextAuthSession && !backendToken) {
-    return <Landing />;
-  }
+  // if (!nextAuthSession && !backendToken) {
+  //   return <Landing />;
+  // }
 
   return <Feed />;
 }

@@ -133,7 +133,7 @@ export default function SignUpPage() {
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="confirm">Password</Label>
+              <Label htmlFor="confirm">Confirm password</Label>
               <Input
                 id="confirm"
                 type="password"
