@@ -55,9 +55,11 @@ export default function ProfileSettingsForm() {
         description: "Your profile has been updated.",
       });
     } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      
       toast.error("Error", {
         description:
-          (error as any).response?.data?.message || "Failed to update profile.",
+          err.response?.data?.message || "Failed to update profile.",
       });
     }
   };

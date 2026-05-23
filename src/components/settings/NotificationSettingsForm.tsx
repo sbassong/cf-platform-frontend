@@ -51,9 +51,11 @@ export default function NotificationSettingsForm() {
         description: "Your notification settings have been updated.",
       });
     } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+
       toast.error("Error", {
         description:
-          (error as any).response?.data?.message ||
+          err.response?.data?.message ||
           "Failed to update settings.",
         variant: "destructive",
       });

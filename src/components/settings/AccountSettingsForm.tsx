@@ -40,9 +40,11 @@ export default function AccountSettingsForm() {
       });
       form.reset();
     } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+
       toast.error("Error", {
         description:
-          (error as any).response?.data?.message ||
+          err.response?.data?.message ||
           "Failed to change password.",
       });
     }
