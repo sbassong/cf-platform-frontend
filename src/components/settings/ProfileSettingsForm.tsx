@@ -11,7 +11,6 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -55,9 +54,10 @@ export default function ProfileSettingsForm() {
       toast.success("Success!", {
         description: "Your profile has been updated.",
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error("Error", {
-        description: error.response?.data?.message || "Failed to update profile.",
+        description:
+          (error as any).response?.data?.message || "Failed to update profile.",
       });
     }
   };

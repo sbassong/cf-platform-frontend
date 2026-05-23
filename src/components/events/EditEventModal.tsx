@@ -65,7 +65,10 @@ export default function EditEventModal({ event, isOpen, onOpenChange }: EditEven
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const updateData: any = { ...values, date: values.date.toISOString() };
+    const updateData: Record<string, unknown> = {
+      ...values,
+      date: values.date.toISOString(),
+    };
 
     try {
       if (imageFile) {

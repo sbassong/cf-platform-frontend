@@ -39,9 +39,11 @@ export default function AccountSettingsForm() {
         description: "Your password has been changed successfully.",
       });
       form.reset();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error("Error", {
-        description: error.response?.data?.message || "Failed to change password.",
+        description:
+          (error as any).response?.data?.message ||
+          "Failed to change password.",
       });
     }
   };
@@ -51,7 +53,7 @@ export default function AccountSettingsForm() {
       <CardHeader>
         <CardTitle>Change Password</CardTitle>
         <CardDescription>
-          Update your password here. It's recommended to use a strong, unique password.
+          {"Update your password here. It's recommended to use a strong, unique password."}
         </CardDescription>
       </CardHeader>
       <CardContent>

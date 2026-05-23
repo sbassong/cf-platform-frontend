@@ -27,8 +27,8 @@ export default function AuthBridgeClient({ session }: { session: Session | null 
 
           window.location.href = '/';
 
-        } catch (err: any) {
-          setError(err.message || 'Could not complete sign-in. Please try again.');
+        } catch (err: unknown) {
+          setError((err as Error).message || 'Could not complete sign-in. Please try again.');
           console.error(err);
         }
       };

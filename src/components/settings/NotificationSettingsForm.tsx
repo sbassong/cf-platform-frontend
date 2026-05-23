@@ -50,9 +50,11 @@ export default function NotificationSettingsForm() {
       toast.success("Success!", {
         description: "Your notification settings have been updated.",
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error("Error", {
-        description: error.response?.data?.message || "Failed to update settings.",
+        description:
+          (error as any).response?.data?.message ||
+          "Failed to update settings.",
         variant: "destructive",
       });
     }

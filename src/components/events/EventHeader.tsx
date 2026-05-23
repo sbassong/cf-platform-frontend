@@ -52,7 +52,7 @@ export default function EventHeader({ event, onEdit }: EventHeaderProps) {
       return (
         <Button variant="secondary" onClick={handleUnRsvp}>
           <LogOut className="mr-2 h-4 w-4" />
-          I Can't Go
+          {`I Can't Go`}
         </Button>
       );
     }
