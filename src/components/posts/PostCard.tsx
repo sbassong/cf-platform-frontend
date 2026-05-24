@@ -169,6 +169,7 @@ export default function PostCard({ post }: { post: PostType }) {
                 src={post?.imageUrl}
                 alt="Post image"
                 fill
+                priority
                 className="rounded-md object-cover"
               />
             </div>
