@@ -41,7 +41,7 @@ import SearchBar from "../search/SearchBar";
 
 // This is a helper component for styling dropdown items, based on shadcn docs
 const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
+  React.ComponentRef<"a">,
   React.ComponentPropsWithoutRef<"a">
 >(({ className, title, children, ...props }, ref) => {
   return (
