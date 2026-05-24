@@ -8,6 +8,7 @@ import {
   SearchResults,
   NotificationSettingsPayload,
   User,
+  Event as EventType,
 } from "@/types";
 
 const api = axios.create({
@@ -99,18 +100,18 @@ export const createEvent = async (data: {
   description: string;
   date: string;
   location: string;
-}): Promise<Event> => {
-  const response = await api.post<Event>("/events", data);
+}): Promise<EventType> => {
+  const response = await api.post<EventType>("/events", data);
   return response.data;
 };
 
-export const rsvpToEvent = async (eventId: string): Promise<Event> => {
-  const response = await api.post<Event>(`/events/${eventId}/rsvp`);
+export const rsvpToEvent = async (eventId: string): Promise<EventType> => {
+  const response = await api.post<EventType>(`/events/${eventId}/rsvp`);
   return response.data;
 };
 
-export const unRsvpFromEvent = async (eventId: string): Promise<Event> => {
-  const response = await api.post<Event>(`/events/${eventId}/un-rsvp`);
+export const unRsvpFromEvent = async (eventId: string): Promise<EventType> => {
+  const response = await api.post<EventType>(`/events/${eventId}/un-rsvp`);
   return response.data;
 };
 export const updateEvent = async (
@@ -121,9 +122,9 @@ export const updateEvent = async (
     date?: string;
     location?: string;
     imageUrl?: string;
-  }
-): Promise<Event> => {
-  const response = await api.patch<Event>(`/events/${eventId}`, data);
+  },
+): Promise<EventType> => {
+  const response = await api.patch<EventType>(`/events/${eventId}`, data);
   return response.data;
 };
 

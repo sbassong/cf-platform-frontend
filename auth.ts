@@ -43,7 +43,9 @@ export const config = {
               providerId: user.id, // 'sub' from the JWT is typically the user.id
             },
           );
-          return oauthRes
+
+          // console.log({oauthRes})
+          // return oauthRes
           return true;
         } catch (err: any) {
           console.error("Error syncing OAuth user with backend:", err.message);

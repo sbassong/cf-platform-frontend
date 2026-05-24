@@ -51,7 +51,10 @@ export default function ProfileHeader({
   const isFollowing = authenticatedUser?.profile?.following?.includes(
     profile._id
   );
-  const isBlocked = authenticatedUser?.blockedUsers?.includes(profile?.userId);
+  // const isBlocked = authenticatedUser?.blockedUsers?.includes(profile?.userId);
+  const isBlocked = authenticatedUser?.blockedUsers?.some(
+    (blockedUser) => blockedUser._id === profile?.userId,
+  );
 
 
   const handleStartConversation = async () => {
