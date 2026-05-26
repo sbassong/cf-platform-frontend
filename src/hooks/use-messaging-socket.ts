@@ -15,7 +15,8 @@ export function useMessagingSocket(conversationId: string | null) {
     if (!user || !conversationId) return;
 
     const newSocket = io(
-      process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL || "http://localhost:3001"
+      process.env.NEXT_PUBLIC_LIVE_BACKEND_URL ||
+        process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL,
     );
     setSocket(newSocket);
 

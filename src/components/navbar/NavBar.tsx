@@ -41,7 +41,7 @@ import SearchBar from "../search/SearchBar";
 
 // This is a helper component for styling dropdown items, based on shadcn docs
 const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
+  React.ComponentRef<"a">,
   React.ComponentPropsWithoutRef<"a">
 >(({ className, title, children, ...props }, ref) => {
   return (
@@ -94,23 +94,22 @@ export default function Navbar() {
         {user ? (
           // LOGGED-IN STATE (Main App Nav)
           <div className="flex flex-grow justify-between">
-            <SearchBar /> 
+            <SearchBar />
 
             <NavigationMenu>
               <NavigationMenuList>
                 {/* Feed Link */}
                 <NavigationMenuItem>
-                  <Link href="/" passHref>
-                    <NavigationMenuLink
-                      className={cn(
-                        navigationMenuTriggerStyle(),
-                        "bg-transparent text-foreground/60 hover:text-foreground/80",
-                        pathname === "/" && "text-foreground font-semibold"
-                      )}
-                    >
-                      Feed
-                    </NavigationMenuLink>
-                  </Link>
+                  <NavigationMenuLink
+                    asChild
+                    className={cn(
+                      navigationMenuTriggerStyle(),
+                      "bg-transparent text-foreground/60 hover:text-foreground/80",
+                      pathname === "/" && "text-foreground font-semibold",
+                    )}
+                  >
+                    <Link href="/">Feed</Link>
+                  </NavigationMenuLink>
                 </NavigationMenuItem>
 
                 {/* Community Dropdown */}
@@ -121,7 +120,7 @@ export default function Navbar() {
                       pathname.startsWith("/groups") ||
                         pathname.startsWith("/events") ||
                         (pathname.startsWith("/messages") &&
-                          "text-foreground font-semibold")
+                          "text-foreground font-semibold"),
                     )}
                   >
                     Community
@@ -146,11 +145,18 @@ export default function Navbar() {
             <div className="flex items-center gap-4">
               <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
-                  
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Button
+                    variant="ghost"
+                    className="relative h-8 w-8 rounded-full"
+                  >
                     <Avatar className="h-9 w-9">
-                      <AvatarImage src={user.profile?.avatarUrl || ""} alt={user.profile?.displayName || "User"} />
-                      <AvatarFallback>{getInitials(user.profile?.displayName || "")}</AvatarFallback>
+                      <AvatarImage
+                        src={user.profile?.avatarUrl || ""}
+                        alt={user.profile?.displayName || "User"}
+                      />
+                      <AvatarFallback>
+                        {getInitials(user.profile?.displayName || "")}
+                      </AvatarFallback>
                     </Avatar>
                     {unreadCount > 0 && (
                       <span className="absolute bottom-6 left-6 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
@@ -159,11 +165,19 @@ export default function Navbar() {
                     )}
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-64 py-2" align="end" forceMount>
+                <DropdownMenuContent
+                  className="w-64 py-2"
+                  align="end"
+                  forceMount
+                >
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                      <p className="text-md font-semibold leading-none">{user.profile?.displayName}</p>
-                      <p className="text-sm leading-none text-muted-foreground">{user.email}</p>
+                      <p className="text-md font-semibold leading-none">
+                        {user.profile?.displayName}
+                      </p>
+                      <p className="text-sm leading-none text-muted-foreground">
+                        {user.email}
+                      </p>
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
@@ -191,7 +205,10 @@ export default function Navbar() {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={signOut} className="text-md text-red-500 focus:text-red-500 hover:bg-red-500/10 py-2 ">
+                  <DropdownMenuItem
+                    onClick={signOut}
+                    className="text-md text-red-500 focus:text-red-500 hover:bg-red-500/10 py-2 "
+                  >
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Sign Out</span>
                   </DropdownMenuItem>

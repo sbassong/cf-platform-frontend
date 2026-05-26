@@ -19,6 +19,8 @@ export function EventCard({ event }: EventCardProps) {
             src={event.imageUrl || ""}
             alt={event.title}
             fill
+            priority
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover"
           />
         </div>
@@ -28,7 +30,7 @@ export function EventCard({ event }: EventCardProps) {
         <CardContent>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Calendar className="h-4 w-4" />
-            <span>{format(new Date(event.date), 'EEEE, MMMM d, yyyy')}</span>
+            <span>{format(new Date(event.date), "EEEE, MMMM d, yyyy")}</span>
           </div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
             <MapPin className="h-4 w-4" />
@@ -36,7 +38,9 @@ export function EventCard({ event }: EventCardProps) {
           </div>
         </CardContent>
         <CardFooter>
-          <p className="text-xs text-muted-foreground">{event.attendeeCount} people attending</p>
+          <p className="text-xs text-muted-foreground">
+            {event.attendeeCount} people attending
+          </p>
         </CardFooter>
       </Card>
     </Link>

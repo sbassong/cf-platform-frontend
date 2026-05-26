@@ -33,9 +33,11 @@ export default function Hero() {
           <div className="hidden md:block">
             <div className="relative w-full aspect-[4/3] rounded-xl shadow-lg overflow-hidden">
               <Image
-                src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=2070&auto=format&fit=crop"
+                // src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=2070&auto=format&fit=crop"
+                src="cf-platform-frontend/public/globe.svg"
                 alt="A group of friends enjoying a social gathering"
                 fill
+                // sizes="lg"
                 className="object-cover"
                 priority
               />

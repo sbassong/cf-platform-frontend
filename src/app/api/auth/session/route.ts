@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   const cookieStore = await cookies();
   const accessTokenCookie = cookieStore.get("access_token");
 
@@ -14,13 +14,13 @@ export async function GET(req: NextRequest) {
 
   try {
     const backendResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/session`,
+      `${process.env.NEXT_PUBLIC_LIVE_BACKEND_URL || process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/session`,
       {
         headers: {
           Cookie: `access_token=${accessTokenCookie?.value}`,
         },
         cache: "no-store",
-      }
+      },
     );
 
     const data = await backendResponse.json();

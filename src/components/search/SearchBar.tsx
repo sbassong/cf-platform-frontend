@@ -46,8 +46,6 @@ export default function SearchBar() {
     command();
   };
 
-  console.log({results})
-
   return (
     <>
       <Button

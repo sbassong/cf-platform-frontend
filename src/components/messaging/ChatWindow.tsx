@@ -52,7 +52,7 @@ export default function ChatWindow({ conversationId }: ChatWindowProps) {
 
   return (
     <div className="flex flex-col h-full">
-      <ScrollArea className="flex-1 p-4" ref={scrollAreaRef as any}>
+      <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
         <div className="space-y-4">
           {messages?.map((msg) => {
             const isOwnMessage = msg.sender._id === user?.profile._id;

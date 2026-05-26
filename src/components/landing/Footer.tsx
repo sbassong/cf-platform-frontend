@@ -7,10 +7,16 @@ export default function Footer() {
         &copy; 2025 Child-Free Platform. All rights reserved.
       </p>
       <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-        <Link href="/terms" className="text-xs hover:underline underline-offset-4">
+        <Link
+          href="/terms"
+          className="text-xs hover:underline underline-offset-4"
+        >
           Terms of Service
         </Link>
-        <Link href="/privacy" className="text-xs hover:underline underline-offset-4">
+        <Link
+          href="/privacy"
+          className="text-xs hover:underline underline-offset-4"
+        >
           Privacy Policy
         </Link>
       </nav>

@@ -46,8 +46,7 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent>
               <p>
-                We foster an environment of mutual respect for all life choices
-                and backgrounds.
+                {`We foster an environment of mutual respect for all life choicesand backgrounds.`}
               </p>
             </CardContent>
           </Card>
@@ -58,8 +57,7 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent>
               <p>
-                We encourage genuine connection by providing a space where you
-                can be your true self.
+                {`We encourage genuine connection by providing a space where you can be your true self.`}
               </p>
             </CardContent>
           </Card>
@@ -70,8 +68,7 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent>
               <p>
-                We are a community built on a foundation of support,
-                understanding, and shared experience.
+                {`We are a community built on a foundation of support, understanding, and shared experience.`}
               </p>
             </CardContent>
           </Card>
@@ -93,8 +90,8 @@ export default function AboutPage() {
             <h3 className="text-xl font-semibold">Jane Doe</h3>
             <p className="text-primary">Co-Founder & CEO</p>
             <p className="mt-2 text-muted-foreground text-sm">
-              "My goal is for this platform to be a place of joy, connection,
-              and empowerment."
+              {`"My goal is for this platform to be a place of joy, connection,
+              and empowerment."`}
             </p>
           </div>
           {/* Founder 2 */}
@@ -106,8 +103,8 @@ export default function AboutPage() {
             <h3 className="text-xl font-semibold">John Smith</h3>
             <p className="text-primary">Co-Founder & CTO</p>
             <p className="mt-2 text-muted-foreground text-sm">
-              "We're focused on building a secure, intuitive, and reliable
-              platform for our community."
+              {`"We're focused on building a secure, intuitive, and reliable
+              platform for our community."`}
             </p>
           </div>
           {/* Founder 3 */}
@@ -119,8 +116,8 @@ export default function AboutPage() {
             <h3 className="text-xl font-semibold">Emily Stone</h3>
             <p className="text-primary">Co-Founder & CCO</p>
             <p className="mt-2 text-muted-foreground text-sm">
-              "Every feature is designed to foster authentic connection and a
-              supportive environment."
+                {`"Every feature is designed to foster authentic connection and a
+                supportive environment."`}
             </p>
           </div>
         </div>

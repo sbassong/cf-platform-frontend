@@ -57,7 +57,7 @@ export default function CreateEventPage() {
         ...values,
         date: values.date.toISOString(),
       });
-      router.push(`/events/${newEvent._id}`);
+      router.push(`/events/${newEvent?._id}`);
     } catch (error) {
       console.error('Failed to create event:', error);
     }

@@ -5,7 +5,6 @@ import Feed from "../components/landing/Feed";
 
 export default async function HomePage() {
   const nextAuthSession = await auth();
-
   const cookieStore = await cookies();
   const backendToken = cookieStore.get("access_token")?.value;
 

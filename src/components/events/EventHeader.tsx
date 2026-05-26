@@ -52,7 +52,7 @@ export default function EventHeader({ event, onEdit }: EventHeaderProps) {
       return (
         <Button variant="secondary" onClick={handleUnRsvp}>
           <LogOut className="mr-2 h-4 w-4" />
-          I Can't Go
+          {`I Can't Go`}
         </Button>
       );
     }
@@ -73,6 +73,7 @@ export default function EventHeader({ event, onEdit }: EventHeaderProps) {
             src={event.imageUrl}
             alt={event.title}
             fill
+            sizes="(max-width: 1024px) 100vw, 1024px"
             className="object-cover"
           />
         )}
@@ -83,12 +84,16 @@ export default function EventHeader({ event, onEdit }: EventHeaderProps) {
           {/* Left Column: Details */}
           <div className="space-y-3">
             <p className="text-primary font-semibold text-sm">
-              {format(new Date(event.date), 'EEEE, MMMM d, yyyy')}
+              {format(new Date(event.date), "EEEE, MMMM d, yyyy")}
             </p>
             <h1 className="text-3xl font-bold">{event.title}</h1>
             <div className="text-muted-foreground">
-              <p>Organized by{' '}
-                <Link href={`/profiles/${event.organizer.username}`} className="font-semibold text-foreground hover:underline">
+              <p>
+                Organized by{" "}
+                <Link
+                  href={`/profiles/${event.organizer.username}`}
+                  className="font-semibold text-foreground hover:underline"
+                >
                   {event.organizer.displayName}
                 </Link>
               </p>

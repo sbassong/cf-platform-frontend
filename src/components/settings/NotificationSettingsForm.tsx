@@ -23,10 +23,10 @@ import { Loader2 } from 'lucide-react';
 
 // Define the validation schema for the form
 const formSchema = z.object({
-  newFollower: z.boolean().default(true),
-  newPostInGroup: z.boolean().default(true),
-  eventReminder: z.boolean().default(true),
-  directMessage: z.boolean().default(true),
+  newFollower: z.boolean(),
+  newPostInGroup: z.boolean(),
+  eventReminder: z.boolean(),
+  directMessage: z.boolean(),
 });
 
 export default function NotificationSettingsForm() {
@@ -50,10 +50,13 @@ export default function NotificationSettingsForm() {
       toast.success("Success!", {
         description: "Your notification settings have been updated.",
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+
       toast.error("Error", {
-        description: error.response?.data?.message || "Failed to update settings.",
-        variant: "destructive",
+        description:
+          err.response?.data?.message ||
+          "Failed to update settings.",
       });
     }
   };

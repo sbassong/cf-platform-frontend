@@ -11,13 +11,13 @@ export default function AuthBridgeClient({ session }: { session: Session | null 
       const completeLogin = async () => {
         try {
           const res = await fetch(
-            `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/provider`,
+            `${process.env.NEXT_PUBLIC_LIVE_BACKEND_URL || process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/provider`,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ email: session.user?.email }),
-              credentials: 'include',
-            }
+              credentials: "include",
+            },
           );
 
           if (!res.ok) {
@@ -27,8 +27,8 @@ export default function AuthBridgeClient({ session }: { session: Session | null 
 
           window.location.href = '/';
 
-        } catch (err: any) {
-          setError(err.message || 'Could not complete sign-in. Please try again.');
+        } catch (err: unknown) {
+          setError((err as Error).message || 'Could not complete sign-in. Please try again.');
           console.error(err);
         }
       };

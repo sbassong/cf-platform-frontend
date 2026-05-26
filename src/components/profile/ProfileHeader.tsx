@@ -51,7 +51,10 @@ export default function ProfileHeader({
   const isFollowing = authenticatedUser?.profile?.following?.includes(
     profile._id
   );
-  const isBlocked = authenticatedUser?.blockedUsers?.includes(profile?.userId);
+  // const isBlocked = authenticatedUser?.blockedUsers?.includes(profile?.userId);
+  const isBlocked = authenticatedUser?.blockedUsers?.some(
+    (blockedUser) => blockedUser._id === profile?.userId,
+  );
 
 
   const handleStartConversation = async () => {
@@ -88,24 +91,24 @@ export default function ProfileHeader({
 
     const updatedUserData = isFollowing
       ? {
-          ...authenticatedUser,
-          profile: {
-            ...authenticatedUser.profile,
-            following: (authenticatedUser?.profile?.following ?? []).filter(
-              (id) => id !== profile._id
-            ),
-          },
-        }
+        ...authenticatedUser,
+        profile: {
+          ...authenticatedUser.profile,
+          following: (authenticatedUser?.profile?.following ?? []).filter(
+            (id) => id !== profile._id
+          ),
+        },
+      }
       : {
-          ...authenticatedUser,
-          profile: {
-            ...authenticatedUser.profile,
-            following: [
-              ...(authenticatedUser?.profile?.following ?? []),
-              profile._id,
-            ],
-          },
-        };
+        ...authenticatedUser,
+        profile: {
+          ...authenticatedUser.profile,
+          following: [
+            ...(authenticatedUser?.profile?.following ?? []),
+            profile._id,
+          ],
+        },
+      };
 
     // 2. Mutate the local SWR cache instantly with the new data
     // The `false` at the end tells SWR not to revalidate immediately
@@ -141,9 +144,10 @@ export default function ProfileHeader({
             "https://images.pexels.com/photos/2356045/pexels-photo-2356045.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2p"
           }
           alt={`${profile.displayName}'s banner`}
-          layout="fill"
-          objectFit="cover"
-          className="rounded-t-lg"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover rounded-t-lg"
         />
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
@@ -246,22 +250,22 @@ export default function ProfileHeader({
                     )}
                     {isFollowing ? "Following" : "Follow"}
                   </Button>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem
-                          className={isBlocked ? 'text-yellow-600' : 'text-red-500'}
-                          onClick={handleBlockToggle}
-                        >
-                          <UserX className="mr-2 h-4 w-4" />
-                          <span>{isBlocked ? 'Unblock' : 'Block'} @{profile.username}</span>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        className={isBlocked ? 'text-yellow-600' : 'text-red-500'}
+                        onClick={handleBlockToggle}
+                      >
+                        <UserX className="mr-2 h-4 w-4" />
+                        <span>{isBlocked ? 'Unblock' : 'Block'} @{profile.username}</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </>
               )}
             </div>

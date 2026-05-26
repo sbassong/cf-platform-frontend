@@ -41,13 +41,13 @@ export default function AvatarUploadModal({
     try {
       // 1. Get pre-signed URL from our backend
       const resUrl = await fetch(
-        `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/profiles/avatar-upload-url`,
+        `${process.env.NEXT_PUBLIC_LIVE_BACKEND_URL || process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/profiles/avatar-upload-url`,
         {
           method: "POST",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ contentType: file.type }),
-        }
+        },
       );
       const { uploadUrl, publicUrl } = await resUrl.json();
 
@@ -60,13 +60,13 @@ export default function AvatarUploadModal({
 
       // 3. Update the profile on our backend with the new publicUrl
       const updateRes = await fetch(
-        `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/profiles/${profile._id}`,
+        `${process.env.NEXT_PUBLIC_LIVE_BACKEND_URL || process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/profiles/${profile._id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
           body: JSON.stringify({ avatarUrl: publicUrl }),
-        }
+        },
       );
 
       if (!updateRes.ok)

@@ -1,20 +1,22 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import ConversationList from '../../components/messaging/ConversationList';
-import ChatWindow from '../../components/messaging/ChatWindow';
-import StartConversationModal from '@/components/messaging/StartConversationModal';
-import { Button } from '@/components/ui/button';
-import { MessageSquarePlus } from 'lucide-react';
-import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import { useState, useEffect, Suspense } from "react";
+import ConversationList from "../../components/messaging/ConversationList";
+import ChatWindow from "../../components/messaging/ChatWindow";
+import StartConversationModal from "@/components/messaging/StartConversationModal";
+import { Button } from "@/components/ui/button";
+import { MessageSquarePlus, Loader2 } from "lucide-react";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
 
-export default function MessagesPage() {
+function MessagesContent() {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams()
-  const initialConversationId = searchParams.get('id');
+  const searchParams = useSearchParams();
+  const initialConversationId = searchParams.get("id");
 
-  const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
+  const [selectedConversationId, setSelectedConversationId] = useState<
+    string | null
+  >(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -39,7 +41,11 @@ export default function MessagesPage() {
       <div className="h-[calc(100vh-3.5rem)] grid grid-cols-[300px_1fr] border-t">
         <aside className="flex flex-col mt-2">
           <div className="p-2 border-b">
-            <Button variant="outline" className="w-full" onClick={() => setIsModalOpen(true)}>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => setIsModalOpen(true)}
+            >
               <MessageSquarePlus className="mr-2 h-4 w-4" />
               New Message
             </Button>
@@ -60,5 +66,19 @@ export default function MessagesPage() {
         </main>
       </div>
     </>
+  );
+}
+
+export default function MessagesPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+      }
+    >
+      <MessagesContent />
+    </Suspense>
   );
 }

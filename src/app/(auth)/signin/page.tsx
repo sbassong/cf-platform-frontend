@@ -35,13 +35,13 @@ export default function SigninPage() {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/signin`,
+        `${process.env.NEXT_PUBLIC_LIVE_BACKEND_URL || process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/signin`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
           credentials: "include",
-        }
+        },
       );
 
       if (!res.ok) {

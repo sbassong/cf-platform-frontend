@@ -47,12 +47,12 @@ export default function SignUpPage() {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/signup`,
+        `${process.env.NEXT_PUBLIC_LIVE_BACKEND_URL || process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/signup`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(signupData),
-        }
+        },
       );
 
       if (res.ok) {
@@ -133,7 +133,7 @@ export default function SignUpPage() {
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="confirm">Password</Label>
+              <Label htmlFor="confirm">Confirm password</Label>
               <Input
                 id="confirm"
                 type="password"

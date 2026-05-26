@@ -15,7 +15,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const { data: user, error, isLoading } = useSWR<User | null>(
+  const { data: user, isLoading } = useSWR<User | null>(
     "/auth/session",
     fetcher,
     {
@@ -27,10 +27,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const { mutate } = useSWRConfig();
 
   const signOut = async () => {
-    await fetch(`${process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/signout`, {
-      method: "POST",
-      credentials: "include",
-    });
+    await fetch(
+      `${process.env.NEXT_PUBLIC_LIVE_BACKEND_URL || process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/signout`,
+      {
+        method: "POST",
+        credentials: "include",
+      },
+    );
     await nextAuthSignOut({ redirect: false });
 
     mutate("/auth/session", null, false);

@@ -36,7 +36,7 @@ export default function PostList({ profileId }: PostListProps) {
   if (!posts || posts.length === 0) {
     return (
       <div className="text-center text-gray-500 bg-white p-8 rounded-lg shadow-md">
-        <p>This user hasn't posted anything yet.</p>
+        <p>{`This user hasn't posted anything yet.`}</p>
       </div>
     );
   }
