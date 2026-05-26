@@ -51,7 +51,7 @@ export default function SearchBar() {
       <Button
         variant="outline"
         className={cn(
-          'relative w-full justify-start text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64'
+          'relative w-50 justify-start text-sm text-muted-foreground sm:pr-12 md:w-80 lg:w-90'
         )}
         onClick={() => setOpen(true)}
       >
