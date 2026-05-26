@@ -27,7 +27,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const { mutate } = useSWRConfig();
 
   const signOut = async () => {
-    console.log("signing out")
     await fetch(
       `${process.env.NEXT_PUBLIC_LIVE_BACKEND_URL || process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL}/auth/signout`,
       {

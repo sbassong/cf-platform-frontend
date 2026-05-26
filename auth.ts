@@ -44,8 +44,6 @@ export const config = {
             },
           );
 
-          // console.log({oauthRes})
-          // return oauthRes
           return true;
         } catch (err: any) {
           console.error("Error syncing OAuth user with backend:", err.message);
