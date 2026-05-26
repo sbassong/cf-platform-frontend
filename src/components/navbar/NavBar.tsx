@@ -211,22 +211,22 @@ export default function Navbar() {
           // LOGGED-OUT STATE (Landing Page Nav)
           <nav className="ml-auto flex gap-4 sm:gap-6">
             <Link href="/about">
-              <Button className="text-lg" variant="ghost">
+              <Button className="text-md" variant="ghost">
                 About
               </Button>
             </Link>
             <Link href="/#testimonials">
-              <Button className="text-lg" variant="ghost">
+              <Button className="text-md" variant="ghost">
                 Testimonials
               </Button>
             </Link>
             <Link href="/signin">
-              <Button className="text-lg" variant="ghost" data-cy="signin-link">
+              <Button className="text-md" variant="ghost" data-cy="signin-link">
                 Sign In
               </Button>
             </Link>
             <Link href="/signup">
-              <Button className="text-lg" data-cy="signup-link">
+              <Button className="text-md" data-cy="signup-link">
                 Sign Up
               </Button>
             </Link>
