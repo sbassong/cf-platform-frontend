@@ -4,9 +4,9 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import useSWR from 'swr';
-import { Conversation } from '@/types';
-import { fetcher } from '@/lib/api';
+import useSWR from "swr";
+import { Conversation } from "@/types";
+import { fetcher } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -30,16 +30,7 @@ import { cn, getInitials } from "@/lib/utils";
 import { Edit, LogOut, Settings, MessageCircle } from "lucide-react";
 import SearchBar from "../search/SearchBar";
 
-// const navLinks = [
-//   { href: "/", label: "Home" },
-//   // { href: "/feed", label: "Feed" },
-//   // { href: "/groups", label: "Groups" },
-//   // { href: "/events", label: "Events" },
-//   // { href: "/messages", label: "Messages" },
-//   { href: "/about", label: "About" },
-// ];
-
-// This is a helper component for styling dropdown items, based on shadcn docs
+// helper component for styling dropdown items, based on shadcn docs
 const ListItem = React.forwardRef<
   React.ComponentRef<"a">,
   React.ComponentPropsWithoutRef<"a">
@@ -51,7 +42,7 @@ const ListItem = React.forwardRef<
           ref={ref}
           className={cn(
             "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className
+            className,
           )}
           {...props}
         >
@@ -71,31 +62,31 @@ export default function Navbar() {
   const { user, signOut } = useAuth();
 
   const { data: conversations } = useSWR<Conversation[]>(
-    user ? '/messaging/conversations' : null,
-    fetcher
+    user ? "/messaging/conversations" : null,
+    fetcher,
   );
 
-  const unreadCount = conversations?.filter(convo =>
-    convo.lastMessage &&
-    convo.lastMessage.sender._id !== user?.profile._id &&
-    user?.profile._id &&
-    !convo.lastMessage.readBy.includes(user.profile._id)
-  ).length || 0;
-
+  const unreadCount =
+    conversations?.filter(
+      (convo) =>
+        convo.lastMessage &&
+        convo.lastMessage.sender._id !== user?.profile._id &&
+        user?.profile._id &&
+        !convo.lastMessage.readBy.includes(user.profile._id),
+    ).length || 0;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center justify-center bg-background/95 backdrop-blur-sm border-b">
-      <div className=" flex items-center. justify-between w-full mx-4 ">
-        <Link href="/" className="flex items-center justify-center mr-6">
-          <span className="sr-only">Child-Free Platform</span>
-          <h1 className="text-lg font-bold">CFP</h1>
-        </Link>
-
+      <Link href="/" className="flex items-center justify-center mx-6">
+        <span className="sr-only">Child-Free Platform</span>
+        <h1 className="text-lg font-bold">CFP</h1>
+      </Link>
+      <div className=" flex items-center justify-between w-full mx-6 ">
         {user ? (
           // LOGGED-IN STATE (Main App Nav)
+
           <div className="flex flex-grow justify-between">
             <SearchBar />
-
             <NavigationMenu>
               <NavigationMenuList>
                 {/* Feed Link */}
@@ -104,7 +95,7 @@ export default function Navbar() {
                     asChild
                     className={cn(
                       navigationMenuTriggerStyle(),
-                      "bg-transparent text-foreground/60 hover:text-foreground/80",
+                      "bg-transparent text-foreground/60 hover:text-foreground/80 text-xl",
                       pathname === "/" && "text-foreground font-semibold",
                     )}
                   >
@@ -116,7 +107,7 @@ export default function Navbar() {
                 <NavigationMenuItem>
                   <NavigationMenuTrigger
                     className={cn(
-                      "bg-transparent text-foreground/60 hover:text-foreground/80",
+                      "bg-transparent text-foreground/60 hover:text-foreground/80 text-xl mr-4",
                       pathname.startsWith("/groups") ||
                         pathname.startsWith("/events") ||
                         (pathname.startsWith("/messages") &&
@@ -219,19 +210,25 @@ export default function Navbar() {
         ) : (
           // LOGGED-OUT STATE (Landing Page Nav)
           <nav className="ml-auto flex gap-4 sm:gap-6">
-            <Link href="/#features">
-              <Button variant="ghost">Features</Button>
+            <Link href="/about">
+              <Button className="text-lg" variant="ghost">
+                About
+              </Button>
             </Link>
             <Link href="/#testimonials">
-              <Button variant="ghost">Testimonials</Button>
+              <Button className="text-lg" variant="ghost">
+                Testimonials
+              </Button>
             </Link>
             <Link href="/signin">
-              <Button variant="ghost" data-cy="signin-link">
+              <Button className="text-lg" variant="ghost" data-cy="signin-link">
                 Sign In
               </Button>
             </Link>
             <Link href="/signup">
-              <Button data-cy="signup-link">Sign Up</Button>
+              <Button className="text-lg" data-cy="signup-link">
+                Sign Up
+              </Button>
             </Link>
           </nav>
         )}
